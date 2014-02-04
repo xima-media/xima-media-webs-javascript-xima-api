@@ -4,20 +4,21 @@
  * @author Sebastian Gierth sgi@xima.de
  * @copyright xima media GmbH
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @depends
  *		google.maps v3.9
  *		jQuery v1.4.1
  */
 var xima = {
 
- 	api: {
+	api: {
 		googlemaps: function()
 		{
 			var _map         = null;
 			var _mapCanvas   = null;
 			var _mapInit     = false;
 			var _infoWindows = [];
+			var _markers  	 = [];
 			var _mapLayers   = {};
 			var _mapData     = {};
 
@@ -59,7 +60,6 @@ var xima = {
 
 				_map = new google.maps.Map(_mapCanvas, _mapOptions);
 
-
 				var useLatLngBounds = (typeof useLatLngBounds !== 'boolean') ? true : useLatLngBounds;
 
 				if (useLatLngBounds){
@@ -67,11 +67,11 @@ var xima = {
 				}
 
 				var lengthPoints = ( ! jQuery.isEmptyObject(_mapData) && _mapData.points) ? Object.keys(_mapData.points).length : 0;
-				var marker = [];
 				var layers = [];
 				var myTitle;
 				var myLatlng;
 				var myIcon;
+				var j;
 
 				// init marker
 				for (var i=0; i < lengthPoints; i++) {
@@ -85,39 +85,34 @@ var xima = {
 					myTitle  = (_mapData.points[i].title) ? _mapData.points[i].title : '';
 					myIcon   = (_mapData.points[i].icon) ? _mapData.points[i].icon : null;
 
-					marker[i] = new google.maps.Marker({
-						position: myLatlng,
-						title:    myTitle,
-						icon:     myIcon,
-						map:      _map
-					});
+					j = this.addMarker(myLatlng, myTitle, myIcon);
 
 					if (useLatLngBounds) {
-						// extend the bounds to include each marker's position
-						bounds.extend(marker[i].position);
+						// extend the bounds to include each markers's position
+						bounds.extend(_markers[j].position);
 					}
 
-					if (_mapData.points[i].windowContent){
+					if (_mapData.points[j].windowContent){
 
-						google.maps.event.addListener(marker[i], 'click', function(j){
+						google.maps.event.addListener(_markers[j], 'click', function(k){
 
 							return function(){
 								self.closeInfoWindows();
 
 								var infoWindow = new google.maps.InfoWindow({
-									content: _mapData.points[j].windowContent
+									content: _mapData.points[k].windowContent
 								});
-								infoWindow.open(_map, marker[j]);
+								infoWindow.open(_map, _markers[k]);
 
 								_infoWindows[0] = infoWindow;
 							}
-						}(i));
+						}(j));
 					}
 
-					marker[i].setMap(_map);
+					_markers[j].setMap(_map);
 				}
 
-				if (useLatLngBounds && marker.length > 0){
+				if (useLatLngBounds && _markers.length > 0){
 					// now fit the map to the newly inclusive bounds
 					_map.fitBounds(bounds);
 
@@ -145,9 +140,7 @@ var xima = {
 				if (_infoWindows.length > 0) {
 					// detach the info-window from the marker ... undocumented in the API docs
 					_infoWindows[0].set("marker", null);
-					// and close it
 					_infoWindows[0].close();
-					// blank the array
 					_infoWindows.length = 0;
 				}
 			};
@@ -252,6 +245,61 @@ var xima = {
 				}
 				return this;
 			}
+
+			/**
+			 * Add a marker to the map and push to the array
+			 * @param location (google.maps.LatLng)
+			 * @param title
+			 * @param icon
+			 * @return current index of pushed element (.length -1)
+			 */
+			this.addMarker = function(location, title, icon){
+
+				_markers.push( new google.maps.Marker({
+					position: location,
+					title:    title,
+					icon:     icon,
+					map:      _map
+				}) );
+
+				return _markers.length -1;
+			}
+
+			/**
+			 * Sets Map for all markers
+			 * @param map google.maps.Map|null to clear
+			 */
+			this.setAllMarkersMap = function(map){
+
+				for (var i = _markers.length -1; i >= 0; i--) {
+					_markers[i].setMap(map);
+				}
+			}
+
+			/**
+			 * Removes the markers from the map, but keeps them in the array
+			 */
+			this.clearMarkers = function(){
+				this.setAllMarkersMap(null);
+			}
+
+			/**
+			 * Deletes all markers in the array by removing references to them
+			 */
+			this.deleteMarkers = function(){
+				this.clearMarkers();
+				_markers = [];
+			}
+
+			/**
+			 * Shows any markers currently in the array
+			 */
+			this.showMarkers = function(){
+				if (_map){
+					this.setAllMarkersMap(_map);
+				}
+			}
+
 		}
 	}
 };

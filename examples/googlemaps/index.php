@@ -25,7 +25,7 @@
 				 * possible Map-Options on https://developers.google.com/maps/documentation/javascript/reference?hl=de-DE#MapOptions
 				 */
 				var myMapOptions = {
-					maxZoom: 13,
+					maxZoom: 13
 				};
 
 				/**
@@ -49,10 +49,22 @@
 					.setMapCanvas(myMapCanvas)
 					.addLayers(myKmlFiles)
 					.initGoogleMaps();
+
+				// init Click-Handler to toggle Map-Markers
+				jQuery('#clearMarkers').on('click', function(){
+					myGoogleMaps.clearMarkers();
+				});
+				jQuery('#showMarkers').on('click', function(){
+					myGoogleMaps.showMarkers();
+				});
 			});
 		</script>
 	</head>
 	<body>
+		<!-- Map-Controls -->
+		<button id="clearMarkers">clear Markers</button>
+		<button id="showMarkers">show Markers</button>
+
 		<!-- Hey xima-api, here you can find the map-data -->
 		<input class="map_data" type="hidden" value='<?php echo file_get_contents('data/map_data.json'); ?>'>
 
