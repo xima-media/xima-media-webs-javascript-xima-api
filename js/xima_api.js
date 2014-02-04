@@ -85,7 +85,8 @@ var xima = {
 					myTitle  = (_mapData.points[i].title) ? _mapData.points[i].title : '';
 					myIcon   = (_mapData.points[i].icon) ? _mapData.points[i].icon : null;
 
-					j = this.addMarker(myLatlng, myTitle, myIcon);
+					this.addMarker(myLatlng, myTitle, myIcon);
+					j = _markers.length -1;
 
 					if (useLatLngBounds) {
 						// extend the bounds to include each markers's position
@@ -251,7 +252,7 @@ var xima = {
 			 * @param location (google.maps.LatLng)
 			 * @param title
 			 * @param icon
-			 * @return current index of pushed element (.length -1)
+			 * @return this
 			 */
 			this.addMarker = function(location, title, icon){
 
@@ -262,42 +263,50 @@ var xima = {
 					map:      _map
 				}) );
 
-				return _markers.length -1;
+				return this;
 			}
 
 			/**
 			 * Sets Map for all markers
 			 * @param map google.maps.Map|null to clear
+			 * @return this
 			 */
 			this.setAllMarkersMap = function(map){
 
 				for (var i = _markers.length -1; i >= 0; i--) {
 					_markers[i].setMap(map);
 				}
+				return this;
 			}
 
 			/**
 			 * Removes the markers from the map, but keeps them in the array
+			 * @return this
 			 */
 			this.clearMarkers = function(){
 				this.setAllMarkersMap(null);
+				return this;
 			}
 
 			/**
 			 * Deletes all markers in the array by removing references to them
+			 * @return this
 			 */
 			this.deleteMarkers = function(){
 				this.clearMarkers();
 				_markers = [];
+				return this;
 			}
 
 			/**
 			 * Shows any markers currently in the array
+			 * @return this
 			 */
 			this.showMarkers = function(){
 				if (_map){
 					this.setAllMarkersMap(_map);
 				}
+				return this;
 			}
 
 		}
