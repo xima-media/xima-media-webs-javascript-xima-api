@@ -20,7 +20,7 @@ var xima = {
 			var _infoWindows = [];
 			var _markers  	 = [];
 			var _mapLayers   = {};
-			var _mapData     = {};
+			var _mapData     = {}; // an Object like { 'points': [ { 'title': 'first_Marker' }, { 'title': 'second_Marker' } ] }
 
 			// @see possible Map-Options on https://developers.google.com/maps/documentation/javascript/reference?hl=de-DE#MapOptions
 			var _mapOptions = {
@@ -33,7 +33,8 @@ var xima = {
 				msg: {
 					IsNotJson:              'Die angegebene Variable ist keine JSON!',
 					MissingMapDataProperty: 'Dem MapData-Object fehlen die benötigten Eigenschaften!',
-					MissingMapCanvas:       'Es wird ein Map-Canvas benötigt!'
+					MissingMapCanvas:       'Es wird ein Map-Canvas benötigt!',
+					MissingMap:       		'Fehlende GoogleMaps Instanz!'
 				}
 			};
 
@@ -42,7 +43,7 @@ var xima = {
 			 */
 			this.initGoogleMaps = function(useLatLngBounds){
 
-				var self = this;
+				// var self = this;
 
 				// if already initialized then return
 				if (_mapInit == true){ return; }
@@ -59,6 +60,27 @@ var xima = {
 				_mapInit = true;
 
 				_map = new google.maps.Map(_mapCanvas, _mapOptions);
+
+				this.applyMapData(useLatLngBounds);
+
+				// init Layers
+				for (var key in _mapLayers) {
+
+					if (_mapLayers.hasOwnProperty(key)){
+						_mapLayers[key].setMap(_map);
+					}
+				}
+			}
+
+			/**
+			 * Applies MapData
+			 */
+			this.applyMapData = function(useLatLngBounds){
+
+				if ( ! _map){
+					console.log(errors.msg.MissingMap);
+					return this;
+				}
 
 				var useLatLngBounds = (typeof useLatLngBounds !== 'boolean') ? true : useLatLngBounds;
 
@@ -93,23 +115,6 @@ var xima = {
 						bounds.extend(_markers[j].position);
 					}
 
-					if (_mapData.points[j].windowContent){
-
-						google.maps.event.addListener(_markers[j], 'click', function(k){
-
-							return function(){
-								self.closeInfoWindows();
-
-								var infoWindow = new google.maps.InfoWindow({
-									content: _mapData.points[k].windowContent
-								});
-								infoWindow.open(_map, _markers[k]);
-
-								_infoWindows[0] = infoWindow;
-							}
-						}(j));
-					}
-
 					_markers[j].setMap(_map);
 				}
 
@@ -122,14 +127,6 @@ var xima = {
 						if (_map.getZoom() > _mapOptions.maxZoom) _map.setZoom(_mapOptions.maxZoom);
 						google.maps.event.removeListener(listener);
 					});
-				}
-
-				// init Layers
-				for (var key in _mapLayers) {
-
-					if (_mapLayers.hasOwnProperty(key)){
-						_mapLayers[key].setMap(_map);
-					}
 				}
 			}
 
@@ -188,7 +185,7 @@ var xima = {
 
 				try {
 					if (isJson == true) {
-						_mapData = jQuery.parseJSON(mapData)
+						_mapData = jQuery.parseJSON(mapData);
 					}
 					else {
 						_mapData = jQuery.parseJSON(jQuery(mapData).val());
@@ -254,7 +251,14 @@ var xima = {
 			 * @param icon
 			 * @return this
 			 */
-			this.addMarker = function(location, title, icon){
+			this.addMarker = function(location, title, icon, windowContent){
+
+				if ( ! _map){
+					console.log(errors.msg.MissingMap);
+					return this;
+				}
+
+				var self = this;
 
 				_markers.push( new google.maps.Marker({
 					position: location,
@@ -262,6 +266,27 @@ var xima = {
 					icon:     icon,
 					map:      _map
 				}) );
+
+				j = _markers.length -1;
+
+				if (windowContent !== false){
+
+					var windowContent = (windowContent) ? windowContent : _mapData.points[j].windowContent;
+
+					google.maps.event.addListener(_markers[j], 'click', function(k){
+
+						return function(){
+							self.closeInfoWindows();
+
+							var infoWindow = new google.maps.InfoWindow({
+								content: windowContent
+							});
+							infoWindow.open(_map, _markers[k]);
+
+							_infoWindows[0] = infoWindow;
+						}
+					}(j));
+				}
 
 				return this;
 			}
