@@ -4,7 +4,7 @@
  * @author Sebastian Gierth sgi@xima.de
  * @copyright xima media GmbH
  *
- * @version 1.1.0
+ * @version 1.1.1
  * @depends
  *		google.maps v3.9
  *		jQuery v1.4.1
@@ -79,6 +79,11 @@ var xima = {
 
 				if ( ! _map){
 					console.log(errors.msg.MissingMap);
+					return this;
+				}
+
+				if (jQuery.isEmptyObject(_mapData) || ! _mapData.points){
+					console.log(errors.msg.MissingMapDataProperty);
 					return this;
 				}
 
