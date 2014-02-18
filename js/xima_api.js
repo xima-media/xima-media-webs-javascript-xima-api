@@ -4,7 +4,7 @@
  * @author Sebastian Gierth sgi@xima.de
  * @copyright xima media GmbH
  *
- * @version 1.2.1
+ * @version 1.2.2
  * @depends
  *		google.maps v3.9
  *		jQuery v1.4.1
