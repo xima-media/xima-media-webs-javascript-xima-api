@@ -46,13 +46,13 @@ var xima = {
 				// var self = this;
 
 				// if already initialized then return
-				if (_mapInit == true){ return; }
+				if (_mapInit === true){ return; }
 
 				// return if something is missing
 
 				if ( ! _mapCanvas){
-					console.log(errors.msg.MissingMapCanvas)
-					return
+					console.log(errors.msg.MissingMapCanvas);
+					return;
 				}
 
 				// begin init
@@ -74,7 +74,7 @@ var xima = {
 						_mapLayers[key].setMap(_map);
 					}
 				}
-			}
+			};
 
 			/**
 			 * Applies MapData
@@ -133,11 +133,11 @@ var xima = {
 
 					// max zoom
 					var listener = google.maps.event.addListener(_map, "zoom_changed", function() {
-						if (_map.getZoom() > _mapOptions.maxZoom) _map.setZoom(_mapOptions.maxZoom);
+						if (_map.getZoom() > _mapOptions.maxZoom) _map.setZoom(parseInt(_mapOptions.maxZoom));
 						google.maps.event.removeListener(listener);
 					});
 				}
-			}
+			};
 
 			/**
 			 * Closes opening Infowindows
@@ -162,7 +162,7 @@ var xima = {
 					_mapOptions = options;
 				}
 				return this;
-			}
+			};
 
 			/**
 			 * Adds further Google-Map-Options
@@ -174,7 +174,7 @@ var xima = {
 					jQuery.extend(_mapOptions, options);
 				}
 				return this;
-			}
+			};
 
 			/**
 			 * Returns current Google-Map-Options
@@ -182,7 +182,7 @@ var xima = {
 			 */
 			this.getMapOptions = function(){
 				return _mapOptions;
-			}
+			};
 
 			/**
 			 * Sets MapData as from JSON
@@ -208,7 +208,7 @@ var xima = {
 				}
 
 				return this;
-			}
+			};
 
 			/**
 			 * Sets element in where the map should be display (Map-Canvas)
@@ -219,7 +219,7 @@ var xima = {
 
 				_mapCanvas = jQuery(mapCanvas).get(0);
 				return this;
-			}
+			};
 
 			/**
 			 * Adds .kml-files
@@ -239,7 +239,7 @@ var xima = {
 					}
 				}
 				return this;
-			}
+			};
 
 			/**
 			 * Remove Layer by key
@@ -251,7 +251,7 @@ var xima = {
 					delete _mapLayers.key;
 				}
 				return this;
-			}
+			};
 
 			/**
 			 * Add a marker to the map and push to the array
@@ -293,12 +293,12 @@ var xima = {
 							infoWindow.open(_map, _markers[k]);
 
 							_infoWindows[0] = infoWindow;
-						}
+						};
 					}(j));
 				}
 
 				return this;
-			}
+			};
 
 			/**
 			 * Sets Map for all markers
@@ -311,7 +311,7 @@ var xima = {
 					_markers[i].setMap(map);
 				}
 				return this;
-			}
+			};
 
 			/**
 			 * Removes the markers from the map, but keeps them in the array
@@ -320,7 +320,7 @@ var xima = {
 			this.clearMarkers = function(){
 				this.setAllMarkersMap(null);
 				return this;
-			}
+			};
 
 			/**
 			 * Deletes all markers in the array by removing references to them
@@ -330,7 +330,7 @@ var xima = {
 				this.clearMarkers();
 				_markers = [];
 				return this;
-			}
+			};
 
 			/**
 			 * Shows any markers currently in the array
@@ -341,7 +341,7 @@ var xima = {
 					this.setAllMarkersMap(_map);
 				}
 				return this;
-			}
+			};
 
 		}
 	}
