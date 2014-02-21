@@ -4,7 +4,7 @@
  * @author Sebastian Gierth sgi@xima.de
  * @copyright xima media GmbH
  *
- * @version 1.2.2
+ * @version 1.2.3
  * @depends
  *		google.maps v3.9
  *		jQuery v1.4.1
@@ -43,8 +43,6 @@ var xima = {
 			 */
 			this.initGoogleMaps = function(useLatLngBounds){
 
-				// var self = this;
-
 				// if already initialized then return
 				if (_mapInit === true){ return; }
 
@@ -58,10 +56,6 @@ var xima = {
 				// begin init
 
 				_mapInit = true;
-
-				if (_mapData.mapOptions){
-					this.addMapOptions(_mapData.mapOptions);
-				}
 
 				_map = new google.maps.Map(_mapCanvas, _mapOptions);
 
@@ -205,6 +199,9 @@ var xima = {
 
 				if (jQuery.isEmptyObject(_mapData) || ! _mapData.points){
 					console.log(errors.msg.MissingMapDataProperty);
+				}
+				else if (_mapData.mapOptions){
+					this.addMapOptions(_mapData.mapOptions);
 				}
 
 				return this;
