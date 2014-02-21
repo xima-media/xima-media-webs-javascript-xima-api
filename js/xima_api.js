@@ -133,7 +133,7 @@ var xima = {
 
 					// max zoom
 					var listener = google.maps.event.addListener(_map, "zoom_changed", function() {
-						if (_map.getZoom() > _mapOptions.maxZoom) _map.setZoom(parseInt(_mapOptions.maxZoom));
+						if (_map.getZoom() > _mapOptions.zoom) _map.setZoom(parseInt(_mapOptions.zoom));
 						google.maps.event.removeListener(listener);
 					});
 				}
