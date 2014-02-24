@@ -4,27 +4,63 @@
  * @author Sebastian Gierth sgi@xima.de
  * @copyright xima media GmbH
  *
- * @version 1.2.3
+ * @version 1.3.3
  * @depends
- *		google.maps v3.9
- *		jQuery v1.4.1
+ *		google.maps 3.9
+ *		jQuery 1.4.1
+ *		JavaScript 1.4
  */
 var xima = {
 
 	api: {
 		googlemaps: function()
 		{
-			var _map         = null;
-			var _mapCanvas   = null;
-			var _mapInit     = false;
-			var _infoWindows = [];
-			var _markers  	 = [];
-			var _mapLayers   = {};
-			var _mapData     = {}; // an Object like { 'points': [ { 'title': 'first_Marker' }, { 'title': 'second_Marker' } ] }
+			var _map          = null;
+			var _mapCanvas    = null;
+			var _mapInit      = false;
+			var _infoWindows  = [];
+			var _markers      = [];
+			var _mapLayers    = {};
+			var _mapData      = {}; // an Object like { 'points': [ { 'title': 'first_Marker' }, { 'title': 'second_Marker' } ] }
+			var _convertRules = {
+				backgroundColor:           'String',
+				center:                    'google.maps.LatLng',
+				disableDefaultUI:          'Boolean',
+				disableDoubleClickZoom:    'Boolean',
+				draggable:                 'Boolean',
+				draggableCursor:           'String',
+				draggingCursor:            'String',
+				heading:                   'Number',
+				keyboardShortcuts:         'Boolean',
+				mapMaker:                  'Boolean',
+				mapTypeControl:            'Boolean',
+				mapTypeControlOptions:     'google.maps.MapTypeControlOptions',
+				mapTypeId:                 'google.maps.MapTypeId',
+				maxZoom:                   'Number',
+				minZoom:                   'Number',
+				noClear:                   'Boolean',
+				overviewMapControl:        'Boolean',
+				overviewMapControlOptions: 'google.maps.OverviewMapControlOptions',
+				panControl:                'Boolean',
+				panControlOptions:         'google.maps.PanControlOptions',
+				rotateControl:             'Boolean',
+				rotateControlOptions:      'google.maps.RotateControlOptions',
+				scaleControl:              'Boolean',
+				scaleControlOptions:       'google.maps.ScaleControlOptions',
+				scrollwheel:               'Boolean',
+				streetView:                'google.maps.StreetViewPanorama',
+				streetViewControl:         'Boolean',
+				streetViewControlOptions:  'google.maps.StreetViewControlOptions',
+				styles:                    'google.maps.MapTypeStyle',
+				tilt:                      'Number',
+				zoom:                      'Number',
+				zoomControl:               'Boolean',
+				zoomControlOptions:        'google.maps.ZoomControlOptions'
+			};
 
 			// @see possible Map-Options on https://developers.google.com/maps/documentation/javascript/reference?hl=de-DE#MapOptions
 			var _mapOptions = {
-				center:  new google.maps.LatLng(51.069660, 13.778158),
+				center: new google.maps.LatLng(51.069660, 13.778158),
 				zoom: 8
 			};
 
@@ -127,7 +163,7 @@ var xima = {
 
 					// max zoom
 					var listener = google.maps.event.addListener(_map, "zoom_changed", function() {
-						if (_map.getZoom() > _mapOptions.zoom) _map.setZoom(parseInt(_mapOptions.zoom));
+						if (_map.getZoom() > _mapOptions.zoom) _map.setZoom(_mapOptions.zoom);
 						google.maps.event.removeListener(listener);
 					});
 				}
@@ -153,7 +189,9 @@ var xima = {
 			this.setMapOptions = function(options){
 
 				if (options){
-					_mapOptions = options;
+					if (xima.api.functions.convertDataType(options, _convertRules)){
+						_mapOptions = options;
+					}
 				}
 				return this;
 			};
@@ -165,7 +203,9 @@ var xima = {
 			this.addMapOptions = function(options){
 
 				if (options){
-					jQuery.extend(_mapOptions, options);
+					if (xima.api.functions.convertDataType(options, _convertRules)){
+						jQuery.extend(_mapOptions, options);
+					}
 				}
 				return this;
 			};
@@ -340,6 +380,55 @@ var xima = {
 				return this;
 			};
 
+		},// end googlemaps
+
+		functions: {
+
+			/**
+			 * Converts data to datatype defined in convertRules using 'instanceof' for compare
+			 * @param mixed data : data as Object which will be converted
+			 * @param object convertRules : key-value-object defining the converting rules like { property : constructor }; (property should be the propertyname of data-Object)
+			 * @return false|true : true on success else false
+			 */
+			convertDataType: function(data, convertRules){
+
+				if ( ! convertRules || typeof data !== 'object'){
+					return false;
+				}
+
+				var success = true;
+
+				for (var data_key in data){
+					if ( ! convertRules[data_key]) continue;
+
+					var classes = convertRules[data_key].split('.');
+					var className;
+
+					className = window[classes[0]];
+					for (var i=1; i<classes.length; i++){
+						className = className[classes[i]];
+					}
+
+					if (data[data_key] instanceof className || typeof data[data_key] === className){
+						continue;
+					}
+
+					if (typeof data[data_key] !== className){
+						try {
+							data[data_key] = className(data[data_key]);
+						} catch (e) {
+							try {
+								data[data_key] = new className();
+							} catch(e) {
+								console.log('Cannot convert '+ data[data_key] +' to '+ className);
+								success = false;
+							}
+						}
+					}
+				}
+
+				return success;
+			}
 		}
 	}
 };
