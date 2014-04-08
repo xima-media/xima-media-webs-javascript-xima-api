@@ -4,7 +4,7 @@
  * @author Sebastian Gierth sgi@xima.de
  * @copyright xima media GmbH
  *
- * @version 1.3.3
+ * @version 1.4.0
  * @depends
  *		google.maps 3.9
  *		jQuery 1.4.1
@@ -13,6 +13,53 @@
 var xima = {
 
 	api: {
+
+		twitter: {
+			bootstrap: function() {
+
+				// error messages which shows on console
+				var errors = {
+					msg: {
+						NoDefaultAnchor:   'Es wurde kein Standard-Anchor festgelegt!'
+					}
+				};
+
+				/**
+				 * Select and shows a tab identified by URL-Anchor
+				 * @param string default_anchor : the default anchor as fallback
+				 * @param string selector_wrapper : jQuery-Selector of anchor tag wrapper
+				 * @return false|true : true on success else false
+				 */
+				this.selectTab = function(default_anchor, selector_wrapper){
+
+					if ( ! default_anchor){
+						console.log(errors.msg.NoDefaultAnchor);
+						return false;
+					}
+
+					var selector_wrapper = selector_wrapper || '';
+					var anchor = document.URL.split('#')[1] || default_anchor;
+					var $anchor = jQuery(selector_wrapper +' a[href="#' + anchor + '"][data-toggle="tab"]');
+
+					if ( ! $anchor.get(0)){
+						$anchor = jQuery(selector_wrapper +' a[href="#' + default_anchor + '"][data-toggle="tab"]');
+					}
+
+					if (typeof $anchor.tab == 'function'){
+						$anchor.tab('show');
+						return true;
+					}
+					else {
+						console.log('Die Funktion "tab" ist nicht definiert! Wurde das tabs JavaScript plugin eingefügt?');
+						return false;
+					}
+
+				} // end tab
+
+			} // end twitter.bootstrap
+
+		}, // end twitter
+
 		googlemaps: function()
 		{
 			var _map          = null;
@@ -429,6 +476,6 @@ var xima = {
 
 				return success;
 			}
-		}
+		} // end functions
 	}
 };
