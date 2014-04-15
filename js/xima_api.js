@@ -9,6 +9,7 @@
  *		JavaScript 1.4
  *		jQuery 1.4.1
  *		google.maps 3.9
+ *		OverlappingMarkerSpiderfier
  *		twbs bootstrap: tab.js v3.1.1
  */
 var xima = {
@@ -65,7 +66,7 @@ var xima = {
 		{
 			var _map          = null;
 			var _mapCanvas    = null;
-			var _markerCluster = null;
+			var _oms = null;
 			var _mapInit      = false;
 			var _infoWindows  = [];
 			var _markers      = [];
@@ -113,9 +114,9 @@ var xima = {
 				zoom: 8
 			};
 
-			// @see possible MarkerClusterer-Options on http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/docs/reference.html#MarkerClustererOptions
-			var _markerClustererOptions = {
-				gridSize: 30
+			// @see possible OverlappingMarkerSpiderfier-Options on https://github.com/jawj/OverlappingMarkerSpiderfier
+			var _omsOptions = {
+				keepSpiderfied: true
 			};
 
 			// error messages which shows on console
@@ -191,6 +192,10 @@ var xima = {
 				var myIcon;
 				var j;
 
+				if (useMarkerClusterer){
+					this.createOverlappingMarkerSpiderfier();
+				}
+
 				// init marker
 				for (var i=0; i < lengthPoints; i++) {
 
@@ -223,10 +228,6 @@ var xima = {
 						if (_map.getZoom() > _mapOptions.zoom) _map.setZoom(_mapOptions.zoom);
 						google.maps.event.removeListener(listener);
 					});
-				}
-
-				if (useMarkerClusterer){
-					this.createMarkerClusterer();
 				}
 			};
 
@@ -373,8 +374,11 @@ var xima = {
 					icon:     icon,
 					map:      _map
 				}) );
-
 				j = _markers.length -1;
+
+				if (_oms){
+					_oms.addMarker(_markers[j]);
+				}
 
 				if (windowContent !== false){
 
@@ -442,42 +446,42 @@ var xima = {
 			};
 
 			/**
-			 * Creates MarkerClusterer
+			 * Creates OverlappingMarkerSpiderfier
 			 * @return this
 			 */
-			this.createMarkerClusterer = function(){
+			this.createOverlappingMarkerSpiderfier = function(){
 
-				if (_map && _markers){
-					_markerCluster = new MarkerClusterer(_map, _markers, _markerClustererOptions);
+				if (_map){
+					_oms = new OverlappingMarkerSpiderfier(_map, _omsOptions);
 				}
 				return this;
 			};
 
-			// TODO : data-type verification before apply Clusterer-Options
+			// TODO : data-type verification before apply OMS-Options
 
 			// /**
-			//  * Sets MarkerClusterer-Options
+			//  * Sets OMS-Options
 			//  * @return this
 			//  */
-			// this.setMarkerClustererOptions = function(options){
+			// this.setOMSOptions = function(options){
 
 			// 	if (options){
 			// 		if (xima.api.functions.convertDataType(options, _convertRules)){
-			// 			_markerClustererOptions = options;
+			// 			_omsOptions = options;
 			// 		}
 			// 	}
 			// 	return this;
 			// };
 
 			// /**
-			//  * Adds further MarkerClusterer-Options
+			//  * Adds further OMS-Options
 			//  * @return this
 			//  */
-			// this.addMarkerClustererOptions = function(options){
+			// this.addOMSOptions = function(options){
 
 			// 	if (options){
 			// 		if (xima.api.functions.convertDataType(options, _convertRules)){
-			// 			jQuery.extend(_markerClustererOptions, options);
+			// 			jQuery.extend(_omsOptions, options);
 			// 		}
 			// 	}
 			// 	return this;
@@ -487,8 +491,8 @@ var xima = {
 			 * Returns current MarkerClusterer-Options
 			 * @return Object markerClustererOptions
 			 */
-			this.getMarkerClustererOptions = function(){
-				return _markerClustererOptions;
+			this.getOMSOptions = function(){
+				return _omsOptions;
 			};
 
 		},// end googlemaps

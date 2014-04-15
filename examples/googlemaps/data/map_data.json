@@ -16,6 +16,13 @@
 		},
 
 		{
+			"windowContent":"<div>\r\n  <div style=\"float:left;max-width:140px;\"><img src=\"http:\/\/interface.deskline.net\/Handlers\/Document?code=SAC&id=329eca17-4ab9-4ab8-b594-e42a507c259b\" title=\"Hotel Prinz eugen - Hausansicht\" style=\"max-width:120px;\"\/><\/div>\r\n  <div style=\"float:left;margin:0 10px;width:200px;\">\r\n    <h4>Ferienwohnung Atelier Orgelspiel<\/h4>\r\n    <p> <\/p>\r\n    <p>\r\n      09599  Freiberg \r\n    <\/p>\r\n    \r\n  <\/div>\r\n<\/div>\r\n<div style=\"clear:both;\"><\/div>",
+			"lat":"50.92006",
+			"lng":"13.34263",
+			"icon":null
+		},
+
+		{
 			"windowContent":"<div>\r\n  <div style=\"float:left;max-width:140px;\"><img src=\"http:\/\/interface.deskline.net\/Handlers\/Document?code=SAC&id=92c46778-129a-4a40-a766-0d117c81870a\" title=\"Au\u00dfenansicht\" style=\"max-width:120px;\"\/><\/div>\r\n  <div style=\"float:left;margin:0 10px;width:200px;\">\r\n    <h4>Familie B. Ufert<\/h4>\r\n    <p> <\/p>\r\n    <p>\r\n      01662 Mei\u00dfen\r\n    <\/p>\r\n    \r\n  <\/div>\r\n<\/div>\r\n<div style=\"clear:both;\"><\/div>",
 			"lat":null,
 			"lng":null,
