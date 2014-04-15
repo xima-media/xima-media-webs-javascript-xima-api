@@ -4,7 +4,7 @@
  * @author Sebastian Gierth sgi@xima.de
  * @copyright xima media GmbH
  *
- * @version 1.4.0
+ * @version 1.5.0
  * @depends
  *		JavaScript 1.4
  *		jQuery 1.4.1
@@ -65,6 +65,7 @@ var xima = {
 		{
 			var _map          = null;
 			var _mapCanvas    = null;
+			var _markerCluster = null;
 			var _mapInit      = false;
 			var _infoWindows  = [];
 			var _markers      = [];
@@ -110,6 +111,11 @@ var xima = {
 			var _mapOptions = {
 				center: new google.maps.LatLng(51.069660, 13.778158),
 				zoom: 8
+			};
+
+			// @see possible MarkerClusterer-Options on http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/docs/reference.html#MarkerClustererOptions
+			var _markerClustererOptions = {
+				gridSize: 30
 			};
 
 			// error messages which shows on console
@@ -215,6 +221,8 @@ var xima = {
 						google.maps.event.removeListener(listener);
 					});
 				}
+
+				this.createMarkerCluster();
 			};
 
 			/**
@@ -426,6 +434,52 @@ var xima = {
 					this.setAllMarkersMap(_map);
 				}
 				return this;
+			};
+
+			this.createMarkerCluster = function(){
+
+				if (_map && _markers){
+					_markerCluster = new MarkerClusterer(_map, _markers, _markerClustererOptions);
+				}
+				return this;
+			};
+
+			// TODO : data-type verification before apply Clusterer-Options
+
+			// /**
+			//  * Sets MarkerClusterer-Options
+			//  * @return this
+			//  */
+			// this.setMarkerClustererOptions = function(options){
+
+			// 	if (options){
+			// 		if (xima.api.functions.convertDataType(options, _convertRules)){
+			// 			_markerClustererOptions = options;
+			// 		}
+			// 	}
+			// 	return this;
+			// };
+
+			// /**
+			//  * Adds further MarkerClusterer-Options
+			//  * @return this
+			//  */
+			// this.addMarkerClustererOptions = function(options){
+
+			// 	if (options){
+			// 		if (xima.api.functions.convertDataType(options, _convertRules)){
+			// 			jQuery.extend(_markerClustererOptions, options);
+			// 		}
+			// 	}
+			// 	return this;
+			// };
+
+			/**
+			 * Returns current MarkerClusterer-Options
+			 * @return Object markerClustererOptions
+			 */
+			this.getMarkerClustererOptions = function(){
+				return _markerClustererOptions;
 			};
 
 		},// end googlemaps
