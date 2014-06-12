@@ -4,7 +4,7 @@
  * @author Sebastian Gierth sgi@xima.de
  * @copyright xima media GmbH
  *
- * @version 1.5.0
+ * @version 1.6.0
  * @depends
  *		JavaScript 1.4
  *		jQuery 1.4.1
@@ -66,10 +66,11 @@ var xima = {
 		{
 			var _map          = null;
 			var _mapCanvas    = null;
-			var _oms = null;
+			var _oms          = null;
 			var _mapInit      = false;
 			var _infoWindows  = [];
 			var _markers      = [];
+			var _polylines    = [];
 			var _mapLayers    = {};
 			var _mapData      = {}; // an Object like { 'points': [ { 'title': 'first_Marker' }, { 'title': 'second_Marker' } ] }
 			var _convertRules = {
@@ -131,17 +132,18 @@ var xima = {
 
 			/**
 			 * Initilize Google Maps
+			 * @return this
 			 */
 			this.initGoogleMaps = function(useLatLngBounds){
 
 				// if already initialized then return
-				if (_mapInit === true){ return; }
+				if (_mapInit === true){ return this; }
 
 				// return if something is missing
 
 				if ( ! _mapCanvas){
 					console.log(errors.msg.MissingMapCanvas);
-					return;
+					return this;
 				}
 
 				// begin init
@@ -159,6 +161,8 @@ var xima = {
 						_mapLayers[key].setMap(_map);
 					}
 				}
+
+				return this;
 			};
 
 			/**
@@ -493,6 +497,58 @@ var xima = {
 			 */
 			this.getOMSOptions = function(){
 				return _omsOptions;
+			};
+
+			/**
+			 * Draw new Polyline by coords with options and store it by key
+			 * @param key Identifier of routecoords in _mapData
+			 * @param routeCoords JSON of coords. If NULL then it looks into _mapData
+			 * @param options PolylineOptions for google.maps.Polyline @see https://developers.google.com/maps/documentation/javascript/reference?hl=de-DE#PolylineOptions
+			 * @return this
+			 */
+			this.drawPolyline = function(key, routeCoords, options){
+
+				var path = [];
+
+				if (routeCoords){
+					_mapData.routes[key] = jQuery.parseJSON(routeCoords);
+				}
+
+				var lengthCoords = ( ! jQuery.isEmptyObject(_mapData) && ! jQuery.isEmptyObject(_mapData.routes) && _mapData.routes[key]) ? Object.keys(_mapData.routes[key]).length : 0;
+
+				// init coords
+				for (var i=0; i < lengthCoords; i++) {
+
+					// skip non-existing coords
+					if ( ! _mapData.routes[key][i].lat || ! _mapData.routes[key][i].lng) {
+						continue;
+					}
+
+					path.push( new google.maps.LatLng(parseFloat(_mapData.routes[key][i].lat), parseFloat(_mapData.routes[key][i].lng)) );
+				}
+
+				// options
+				var polylineOptions = {
+					path:          path,
+					strokeColor:   '#FF0000',
+					strokeOpacity: 1.0,
+					strokeWeight:  2
+				};
+
+				if (options){
+					// TODO : create convertRules (or other function to determine correct types)
+					//if (xima.api.functions.convertDataType(options, convertRules)){
+						jQuery.extend(polylineOptions, options);
+					//}
+				}
+
+				_polylines[key] = new google.maps.Polyline(polylineOptions);
+
+				if (_map){
+					_polylines[key].setMap(_map);
+				}
+
+				return this;
 			};
 
 		},// end googlemaps

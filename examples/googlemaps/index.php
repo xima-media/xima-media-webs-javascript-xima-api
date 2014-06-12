@@ -52,6 +52,9 @@
 					.addLayers(myKmlFiles)
 					.initGoogleMaps();
 
+				// draw a Polyline with key "route_42" defined in data/map_data.json
+				myGoogleMaps.drawPolyline("route_42");
+
 				// init Click-Handler to toggle Map-Markers
 				jQuery('#clearMarkers').on('click', function(){
 					myGoogleMaps.clearMarkers();
