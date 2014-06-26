@@ -22,7 +22,8 @@ var xima = {
 				// error messages which shows on console
 				var errors = {
 					msg: {
-						NoDefaultAnchor:   'Es wurde kein Standard-Anchor festgelegt!'
+						NoDefaultAnchor:   'Es wurde kein Standard-Anchor festgelegt!',
+						NoFunctionTab:   'Die Funktion "tab" ist nicht definiert! Wurde tab.js (Twitter Bootstrap JS-PlugIn) eingefügt?'
 					}
 				};
 
@@ -33,6 +34,7 @@ var xima = {
 				 * @return false|true : true on success else false
 				 */
 				this.selectTab = function(default_anchor, selector_wrapper){
+                    var anchor = '';
 
 					if ( ! default_anchor){
 						console.log(errors.msg.NoDefaultAnchor);
@@ -40,23 +42,37 @@ var xima = {
 					}
 
 					var selector_wrapper = selector_wrapper || '';
-					var anchor = document.URL.split('#')[1] || default_anchor;
+					var queryString = document.URL.split('?')[1];
+                    
+                    if (queryString) {
+                        var param, key;
+                        var params = queryString.split('&');
+                        for (key in params) {
+                            param = params[key].split('=');
+                            if (param[0] === 'tab') {
+                                anchor = param[1];
+                            }
+                        }
+                    }
+ 
+                    anchor = (anchor === '') ? default_anchor : anchor;
+                    
 					var $anchor = jQuery(selector_wrapper +' a[href="#' + anchor + '"][data-toggle="tab"]');
 
 					if ( ! $anchor.get(0)){
 						$anchor = jQuery(selector_wrapper +' a[href="#' + default_anchor + '"][data-toggle="tab"]');
 					}
 
-					if (typeof $anchor.tab == 'function'){
+					if (typeof $anchor.tab === 'function'){
 						$anchor.tab('show');
 						return true;
 					}
 					else {
-						console.log('Die Funktion "tab" ist nicht definiert! Wurde tab.js (Twitter Bootstrap JS-PlugIn) eingefügt?');
+						console.log(errors.msg.NoFunctionTab);
 						return false;
 					}
 
-				} // end tab
+				}; // end tab
 
 			} // end twitter.bootstrap
 
