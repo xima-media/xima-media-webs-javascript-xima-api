@@ -220,23 +220,22 @@ var xima = {
 				for (var i=0; i < lengthPoints; i++) {
 
 					// skip non-existing coords
-					if ( ! _mapData.points[i].lat || ! _mapData.points[i].lng) {
-						continue;
-					}
+					if ( _mapData.points[i].lat !== null || _mapData.points[i].lng !== null) {
 
-					myLatlng = new google.maps.LatLng(parseFloat(_mapData.points[i].lat), parseFloat(_mapData.points[i].lng));
-					myTitle  = (_mapData.points[i].title) ? _mapData.points[i].title : '';
-					myIcon   = (_mapData.points[i].icon) ? _mapData.points[i].icon : null;
+                        myLatlng = new google.maps.LatLng(parseFloat(_mapData.points[i].lat), parseFloat(_mapData.points[i].lng));
+                        myTitle  = (_mapData.points[i].title) ? _mapData.points[i].title : '';
+                        myIcon   = (_mapData.points[i].icon) ? _mapData.points[i].icon : null;
 
-					this.addMarker(myLatlng, myTitle, myIcon);
-					j = _markers.length -1;
+                        this.addMarker(myLatlng, myTitle, myIcon);
+                        j = _markers.length -1;
 
-					if (useLatLngBounds) {
-						// extend the bounds to include each markers's position
-						bounds.extend(_markers[j].position);
-					}
+                        if (useLatLngBounds) {
+                            // extend the bounds to include each markers's position
+                            bounds.extend(_markers[j].position);
+                        }
 
-					_markers[j].setMap(_map);
+                        _markers[j].setMap(_map);
+                    }
 				}
 
 				if (useLatLngBounds && _markers.length > 0){
