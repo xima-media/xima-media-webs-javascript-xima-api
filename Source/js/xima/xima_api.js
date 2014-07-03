@@ -26,14 +26,16 @@ var xima = {
 						NoFunctionTab:   'Die Funktion "tab" ist nicht definiert! Wurde tab.js (Twitter Bootstrap JS-PlugIn) eingefügt?'
 					}
 				};
+				
+				var selectedTabId = null;
 
 				/**
 				 * Select and shows a tab identified by URL-Anchor
 				 * @param string default_anchor : the default anchor as fallback
 				 * @param string selector_wrapper : jQuery-Selector of anchor tag wrapper
 				 * @return false|true : true on success else false
-				 */
-				this.selectTab = function(default_anchor, selector_wrapper){
+				 */ 
+				this.initTabs = function(default_anchor, selector_wrapper){
                     var anchor = '';
 
 					if ( ! default_anchor){
@@ -43,17 +45,21 @@ var xima = {
 
 					var selector_wrapper = selector_wrapper || '';
 					var queryString = document.URL.split('?')[1];
+					
+					if (queryString){
+						queryString = queryString.split('#')[0];
                     
-                    if (queryString) {
-                        var param, key;
-                        var params = queryString.split('&');
-                        for (key in params) {
-                            param = params[key].split('=');
-                            if (param[0] === 'tab') {
-                                anchor = param[1];
-                            }
-                        }
-                    }
+	                    if (queryString) {
+	                        var param, key;
+	                        var params = queryString.split('&');
+	                        for (key in params) {
+	                            param = params[key].split('=');
+	                            if (param[0] === 'tab') {
+	                                anchor = param[1];
+	                            }
+	                        }
+	                    }
+					}
  
                     anchor = (anchor === '') ? default_anchor : anchor;
                     
@@ -62,9 +68,17 @@ var xima = {
 					if ( ! $anchor.get(0)){
 						$anchor = jQuery(selector_wrapper +' a[href="#' + default_anchor + '"][data-toggle="tab"]');
 					}
+					
+					//keep the selected tab
+					jQuery(selector_wrapper + ' a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+						selectedTabId = jQuery(e.target).attr('href').split('#')[1];
+						});
 
 					if (typeof $anchor.tab === 'function'){
 						$anchor.tab('show');
+						
+						selectedTabId = $anchor.attr('href').split('#')[1];
+						
 						return true;
 					}
 					else {
@@ -72,7 +86,15 @@ var xima = {
 						return false;
 					}
 
-				}; // end tab
+				};
+		                  
+				this.__defineGetter__("selectedTabId", function(){
+			        return selectedTabId;
+			    });
+			   
+			    this.__defineSetter__("selectedTabId", function(val){
+			    	selectedTabId = val;
+			    }); // end tab
 
 			} // end twitter.bootstrap
 
