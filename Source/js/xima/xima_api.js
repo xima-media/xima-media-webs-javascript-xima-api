@@ -239,12 +239,16 @@ var xima = {
 				}
 
 				// init marker
+				var currentLat;
+				var currentLang;
 				for (var i=0; i < lengthPoints; i++) {
 
+					currentLat = parseFloat(_mapData.points[i].lat);
+					currentLang = parseFloat(_mapData.points[i].lng);
 					// skip non-existing coords
-					if ( _mapData.points[i].lat !== null || _mapData.points[i].lng !== null) {
+					if ( ! isNaN(currentLat) && ! isNaN(currentLang) ) {
 
-                        myLatlng = new google.maps.LatLng(parseFloat(_mapData.points[i].lat), parseFloat(_mapData.points[i].lng));
+                        myLatlng = new google.maps.LatLng(currentLat, currentLang);
                         myTitle  = (_mapData.points[i].title) ? _mapData.points[i].title : '';
                         myIcon   = (_mapData.points[i].icon) ? _mapData.points[i].icon : null;
 
