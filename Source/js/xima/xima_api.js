@@ -170,9 +170,11 @@ var xima = {
 
 			/**
 			 * Initilize Google Maps
+			 * @param boolean useLatLngBounds (default=true)
+			 * @param boolean useMarkerClusterer (default=true)
 			 * @return this
 			 */
-			this.initGoogleMaps = function(useLatLngBounds){
+			this.initGoogleMaps = function(useLatLngBounds, useMarkerClusterer){
 
 				// if already initialized then return
 				if (_mapInit === true){ return this; }
@@ -190,7 +192,7 @@ var xima = {
 
 				_map = new google.maps.Map(_mapCanvas, _mapOptions);
 
-				this.applyMapData(useLatLngBounds);
+				this.applyMapData(useLatLngBounds, useMarkerClusterer);
 
 				// init Layers
 				for (var key in _mapLayers) {

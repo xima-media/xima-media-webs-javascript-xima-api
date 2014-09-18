@@ -13,9 +13,9 @@
 		<!-- dependency -->
 		<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?v=3.9&sensor=false"></script>
-		<script src="../../libs/OverlappingMarkerSpiderfier.min.js"></script>
+		<script src="../../../Source/js/xima/libs/OverlappingMarkerSpiderfier.min.js"></script>
 		<!-- include xima api -->
-		<script src="../../js/xima_api.js"></script>
+		<script src="../../../Source/js/xima/xima_api.js"></script>
 		<script>
 			jQuery(document).ready(function($)
 			{
@@ -50,7 +50,7 @@
 					.addMapOptions(myMapOptions)
 					.setMapCanvas(myMapCanvas)
 					.addLayers(myKmlFiles)
-					.initGoogleMaps();
+					.initGoogleMaps(true, false);
 
 				// draw a Polyline with key "route_42" defined in data/map_data.json
 				myGoogleMaps.drawPolyline("route_42");
