@@ -192,8 +192,6 @@ var xima = {
 
 				_map = new google.maps.Map(_mapCanvas, _mapOptions);
 
-				this.applyMapData(useLatLngBounds, useMarkerClusterer);
-
 				// init Layers
 				for (var key in _mapLayers) {
 
@@ -328,24 +326,35 @@ var xima = {
 			};
 
 			/**
-			 * Sets MapData as from JSON
-			 * @param mapData : Data as JSON | jQuery-Selector of element which have got JSON-Data in value-Attribute
-			 * @param isJson : if true then mapData expects as JSON
+			 * Sets MapData
+			 * @param mapData : string | object | array The map data as json string, jquery selector string, array or object.
 			 * @return this
 			 */
-			this.setMapData = function(mapData, isJson){
+			this.setMapData = function(mapData){
 
-				try {
-					if (isJson == true) {
-						_mapData = jQuery.parseJSON(mapData);
-					}
-					else {
-						_mapData = jQuery.parseJSON(jQuery(mapData).val());
-					}
-				} catch (e){
-					console.log(errors.msg.IsNotJson);
+				//is it an array or object?
+				if ((jQuery.type(mapData) === "array") || (jQuery.type(mapData) === "object"))
+				{
+					_mapData = mapData;
 				}
-
+				else if (jQuery.type(mapData) === "string")
+				{
+					json = mapData;
+					//is there a dom element the holds json?
+					if (jQuery(mapData).length !== 0)
+					{
+						json = jQuery(mapData).val();
+					}
+					
+					try {
+						//try to decode json
+						_mapData = jQuery.parseJSON(json);
+						
+					} catch (e) {
+						console.log(errors.msg.IsNotJson);
+					}
+				}
+					
 				if (jQuery.isEmptyObject(_mapData) || ! _mapData.points){
 					console.log(errors.msg.MissingMapDataProperty);
 				}
