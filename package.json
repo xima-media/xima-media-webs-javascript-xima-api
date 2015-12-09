@@ -1,0 +1,16 @@
+{
+  "name": "webs-javascript-xima-api",
+  "version": "2.0.0",
+  "description": "The XIMA JavaScript API is a bunch of modules to provide common JavaScript functionalities and plugins.",
+  "main": "Source/js/xima/xima_api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.xima.de:webs-javascript-xima-api.git"
+  },
+  "author": "XIMA MEDIA GmbH",
+  "license": "MIT",
+  "private": true
+}
