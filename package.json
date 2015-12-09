@@ -12,5 +12,15 @@
   },
   "author": "XIMA MEDIA GmbH",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-compress": "~0.8.0",
+    "grunt-grock": "^0.1.7"
+  }
 }
