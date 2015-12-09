@@ -13,3 +13,4 @@ var XIMA = {
  * Register modules here ...
  * e.g. XIMA.api.module = moduleObject;
  */
+XIMA.api.responsiveImages = respimg;
