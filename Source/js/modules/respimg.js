@@ -55,10 +55,13 @@ XIMA.api.responsiveImages = (function(window, document, $, undefined){
                 var images = [];
                 for (var i in srcsets){
 
-                    images.push({
-                        src: /(?:.(?!\d+w))+/.exec(srcsets[i])[0].trim(),
-                        width: /(\d+)(?:w)/.exec(srcsets[i])[1]
-                    });
+                    if (srcsets[i]) {
+
+                        images.push({
+                            src: /(?:.(?!\d+w))+/.exec(srcsets[i])[0].trim(),
+                            width: /(\d+)(?:w)/.exec(srcsets[i])[1]
+                        });
+                    }
                 }
 
                 // Sort ascending by width property
