@@ -4,7 +4,7 @@
  * @author Sebastian Gierth sgi@xima.de
  * @copyright xima media GmbH
  *
- * @version 1.6.0
+ * @version 1.7.0
  * @depends
  *		JavaScript 1.4
  *		jQuery 1.4.1
@@ -16,6 +16,104 @@ var xima = {
 
 	api: {
 
+		/**
+		 * @version 1.0.0
+		 */
+		responsiveImages: (function(window, document, $, undefined){
+
+			/**
+			 * selectors
+			 * @var object
+			 */
+			var selectors = {};
+
+			/**
+			 * Set selectors for jQuery objects
+			 * @param {string} wrapperSelector Selector of element that wraps the <img/>.
+			 * @param {string} imageSelector   Selector of responsive <img/>.
+			 * @return void
+			 */
+			function init(wrapperSelector, imageSelector) {
+
+				selectors = {
+					wrapper: wrapperSelector || 'body',
+					image: imageSelector || 'img'
+				};
+			}
+
+			/**
+			 * Get sourceset and set the best fitting source as image.
+			 * @return void
+			 */
+			function setResponsiveImages() {
+
+				$(selectors.wrapper).each(function(){
+
+					var $this = $(this);
+
+					var gridElement = {
+						width: $this.width()
+					};
+
+					// Iterate through all <img/> of wrapper
+					$(selectors.image, $(this)).each(function(){
+
+						var $this = $(this);
+
+						// Get sourceset by comma seperated data-attribute
+						var srcsets = $this.data('srcset').split(',');
+
+						// create objects from array of sourcesets
+						var images = [];
+						for (var i in srcsets){
+
+							if (srcsets[i]) {
+
+								images.push({
+									src: /(?:.(?!\d+w))+/.exec(srcsets[i])[0].trim(),
+									width: /(\d+)(?:w)/.exec(srcsets[i])[1]
+								});
+							}
+						}
+
+						// Sort ascending by width property
+						images.sort(function(a, b){
+							return a.width - b.width;
+						});
+
+						// Set the best fitting source as src-attribute
+						for (var j in images){
+							if (images[j].width >= gridElement.width){
+								$this.attr('src', images[j].src);
+								break;
+							}
+							else if (j == images.length -1){
+								$this.attr('src', images[j].src);
+							}
+						}
+					});
+				});
+			}
+
+			/**
+			 * Event handler on resizing window.
+			 */
+			window.onresize = setResponsiveImages;
+
+			/**
+			 * Return public object
+			 */
+			return {
+				run: function(wrapperSelector, imageSelector){
+
+					init(wrapperSelector, imageSelector);
+					setResponsiveImages();
+				}
+			};
+
+		})(window, document, jQuery),
+		// end responsiveImages
+
 		twitter: {
 			bootstrap: function() {
 
@@ -26,7 +124,7 @@ var xima = {
 						NoFunctionTab:   'Die Funktion "tab" ist nicht definiert! Wurde tab.js (Twitter Bootstrap JS-PlugIn) eingefügt?'
 					}
 				};
-				
+
 				var selectedTabId = null;
 
 				/**
@@ -34,7 +132,7 @@ var xima = {
 				 * @param string default_anchor : the default anchor as fallback
 				 * @param string selector_wrapper : jQuery-Selector of anchor tag wrapper
 				 * @return false|true : true on success else false
-				 */ 
+				 */
 				this.initTabs = function(default_anchor, selector_wrapper){
                     var anchor = '';
 
@@ -45,10 +143,10 @@ var xima = {
 
 					var selector_wrapper = selector_wrapper || '';
 					var queryString = document.URL.split('?')[1];
-					
+
 					if (queryString){
 						queryString = queryString.split('#')[0];
-                    
+
 	                    if (queryString) {
 	                        var param, key;
 	                        var params = queryString.split('&');
@@ -60,15 +158,15 @@ var xima = {
 	                        }
 	                    }
 					}
- 
+
                     anchor = (anchor === '') ? default_anchor : anchor;
-                    
+
 					var $anchor = jQuery(selector_wrapper +' a[href="#' + anchor + '"][data-toggle="tab"]');
 
 					if ( ! $anchor.get(0)){
 						$anchor = jQuery(selector_wrapper +' a[href="#' + default_anchor + '"][data-toggle="tab"]');
 					}
-					
+
 					//keep the selected tab
 					jQuery(selector_wrapper + ' a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
 						selectedTabId = jQuery(e.target).attr('href').split('#')[1];
@@ -76,9 +174,9 @@ var xima = {
 
 					if (typeof $anchor.tab === 'function'){
 						$anchor.tab('show');
-						
+
 						selectedTabId = $anchor.attr('href').split('#')[1];
-						
+
 						return true;
 					}
 					else {
@@ -87,11 +185,11 @@ var xima = {
 					}
 
 				};
-		                  
+
 				this.__defineGetter__("selectedTabId", function(){
 			        return selectedTabId;
 			    });
-			   
+
 			    this.__defineSetter__("selectedTabId", function(val){
 			    	selectedTabId = val;
 			    }); // end tab
@@ -345,16 +443,16 @@ var xima = {
 					{
 						json = jQuery(mapData).val();
 					}
-					
+
 					try {
 						//try to decode json
 						_mapData = jQuery.parseJSON(json);
-						
+
 					} catch (e) {
 						console.log(errors.msg.IsNotJson);
 					}
 				}
-					
+
 				if (jQuery.isEmptyObject(_mapData) || ! _mapData.points){
 					console.log(errors.msg.MissingMapDataProperty);
 				}
