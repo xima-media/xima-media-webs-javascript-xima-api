@@ -7,7 +7,7 @@
  * 		jQuery 1.4.1
  *
  */
-var respimg = (function(window, document, $, undefined){
+XIMA.api.responsiveImages = (function(window, document, $, undefined){
 
     /**
      * selectors
