@@ -4,6 +4,7 @@
   "authors": [
     "Sebastian Gierth <sgi@xima.de>"
   ],
+  "main": "Source/js/xima/xima_api.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
