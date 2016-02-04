@@ -52,7 +52,7 @@ var xima = {
 
 					var $this = $(this);
 
-					var gridElement = {
+					var wrapElement = {
 						width: $this.width()
 					};
 
@@ -84,12 +84,14 @@ var xima = {
 
 						// Set the best fitting source as src-attribute
 						for (var j in images){
-							if (images[j].width >= gridElement.width){
+							if (images[j].width >= wrapElement.width){
 								$this.attr('src', images[j].src);
+								$this.attr('width', wrapElement.width);
 								break;
 							}
 							else if (j == images.length -1){
 								$this.attr('src', images[j].src);
+								$this.attr('width', wrapElement.width);
 							}
 						}
 					});
