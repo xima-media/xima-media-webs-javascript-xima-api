@@ -4,13 +4,14 @@
  * @author Sebastian Gierth sgi@xima.de
  * @copyright xima media GmbH
  *
- * @version 1.7.0
+ * @version 1.8.0
  * @depends
  *		JavaScript 1.4
  *		jQuery 1.4.1
  *		google.maps 3.9
  *		OverlappingMarkerSpiderfier
  *		twbs bootstrap: tab.js v3.1.1
+ *		OpenLayers v3.7.0
  */
 var xima = {
 
