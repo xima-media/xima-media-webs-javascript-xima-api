@@ -111,6 +111,10 @@ var xima = {
 
 					init(wrapperSelector, imageSelector);
 					setResponsiveImages();
+				},
+				refresh: function(){
+
+					setResponsiveImages();
 				}
 			};
 
