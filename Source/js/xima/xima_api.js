@@ -703,6 +703,141 @@ var xima = {
 
 		},// end googlemaps
 
+		openlayers: (function(window, document, $, undefined){
+
+			/**
+			 * selectors
+			 * @var object
+			 */
+			var selectors = {};
+
+			/**
+			 * Array of {ol.Map}
+			 * @type {Array}
+             */
+			var maps = [];
+
+			/**
+			 * Map class
+			 * @param parameters
+			 */
+			var map = function(parameters){
+
+				var _this = this;
+
+				/**
+				 * @type {ol.Map}
+				 */
+				this.map = new ol.Map({
+					target: parameters.target
+				});
+
+				/**
+				 * @param {ol.layer.Base} layer Layer.
+				 */
+				this.addLayer = function(layer){
+					_this.map.addLayer(layer);
+				};
+
+				/**
+				 * initialize
+				 */
+				this.initialize = function(){
+
+					// Add base layer if provided
+					if (parameters.hasOwnProperty('baseLayerUrl')){
+
+						var baseLayer = new ol.layer.Tile({
+							source: new ol.source.XYZ({
+								attributions: [
+									new ol.Attribution({
+										html: parameters.attribution || ''
+									})
+								],
+								tilePixelRatio: 2,
+								url: parameters.baseLayerUrl
+							}),
+							name: 'baseLayer',
+							title: 'Base Layer'
+						});
+
+						_this.map.addLayer(baseLayer);
+					}
+
+					// Set View
+					if (parameters.hasOwnProperty('view')){
+
+						var view = new ol.View({
+							center: ol.proj.transform([parameters.view.lon, parameters.view.lat], 'EPSG:4326', 'EPSG:3857'),
+							zoom: parameters.view.zoom || 7
+						});
+
+						_this.map.setView(view);
+					}
+				};
+
+				this.initialize();
+			};
+
+			/**
+			 * Set selectors for jQuery objects
+			 * @param {string} wrapperSelector Selector of element that wraps the map.
+			 * @param {string} mapSelector   Selector of map.
+			 * @return void
+			 */
+			function initialize(wrapperSelector, mapSelector) {
+
+				selectors = {
+					wrapper: wrapperSelector,
+					map: mapSelector
+				};
+			}
+
+			/**
+			 *
+			 * @returns {Array}
+             */
+			function getArrayOfMaps(parameters) {
+
+				$(selectors.wrapper).each(function(){
+					$(selectors.map, $(this)).each(function(){
+
+						maps.push(new map({
+							target: $(this).get(0),
+							baseLayerUrl: parameters.baseLayerUrl,
+							view: parameters.view,
+							attribution: parameters.attribution
+						}));
+					});
+				});
+
+				return maps;
+			}
+
+			/**
+			 * Returns API-Object
+			 */
+			return {
+				/**
+				 *
+				 * @param wrapperSelector
+				 * @param mapSelector
+				 * @param baseLayerUrl
+				 * @param lat
+                 * @param lon
+                 * @param zoom
+                 * @param attribution
+                 * @returns {Array}
+                 */
+				createMaps: function(wrapperSelector, mapSelector, baseLayerUrl, lat, lon, zoom, attribution){
+
+					initialize(wrapperSelector, mapSelector);
+					return getArrayOfMaps({baseLayerUrl: baseLayerUrl, view: {lat: lat, lon: lon, zoom: zoom}, attribution: attribution});
+				}
+			}
+
+		})(window, document, jQuery), // end openlayers
+
 		functions: {
 
 			/**
