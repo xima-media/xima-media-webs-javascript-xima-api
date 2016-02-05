@@ -61,7 +61,7 @@ module.exports = function (grunt) {
         // Veränderungen beobachten
         watch: {
             files: ['<%= conf.src.js %>/**/*'],
-            tasks: ['dev']
+            tasks: ['dist']
         }
     });
 
@@ -79,12 +79,12 @@ module.exports = function (grunt) {
     /**
      * Grunt-Tasks
      */
-    // Dev - Zur Entwicklungszeit geeignet.
-    grunt.registerTask('dev', ['clean', 'copy']);
+    // Dist - Einfaches Kopieren der Dateien in das /dist -Verzeichnis.
+    grunt.registerTask('dist', ['clean', 'copy']);
 
     // Prod - Für Live-Umgebungen geeignet.
     grunt.registerTask('prod', ['clean', 'concat', 'uglify']);
 
-    // Default
-    grunt.registerTask('default', ['dev', 'watch']);
+    // Default - Zur Entwicklungszeit geeignet.
+    grunt.registerTask('default', ['clean', 'copy', 'watch']);
 };

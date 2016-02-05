@@ -21,5 +21,5 @@ Vor jedem Build-Prozess wird dieses Verzeichnis geleert.
 Folgende Befehle stehen zur Verfügung:
 
 - `grunt` - Geeignet zur Entwicklungszeit (kein Minifizieren, kein Zusammenfassen, Beobachtungsmodus)
-- `grunt dev` - Einfaches Kopieren der Dateien in das /dist -Verzeichnis.
+- `grunt dist` - Einfaches Kopieren der Dateien in das /dist -Verzeichnis.
 - `grunt prod` - Zusammenfügen und Minifizieren der Dateien. Geeignet für Produktiv-Umgebungen.
