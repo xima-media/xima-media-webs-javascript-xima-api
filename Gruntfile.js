@@ -1,5 +1,15 @@
 module.exports = function (grunt) {
 
+    /**
+     * Option to only take action (concat, minify, etc.) to specified modules.
+     * You can seperate modulenames by ",".
+     * Default are all modules.
+     */
+    var modules = grunt.option('modules') || ['*'];
+
+    /**
+     * Initialize configuration
+     */
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         conf: {
@@ -40,6 +50,14 @@ module.exports = function (grunt) {
                     '<%= conf.src.js %>/xima_api.js',
                     '<%= conf.src.js %>/modules/*.js'
                 ],
+                filter: function(filepath) {
+                    var filepathParts = /(modules)(?:\\|\/)([^/\\]+)(?=\.js$)/.exec(filepath);
+
+                    if (filepathParts != null && filepathParts[1] == 'modules' && modules[0] != '*'){
+                        return modules.indexOf(filepathParts[2]) != -1
+                    }
+                    return true;
+                },
                 dest: '<%= conf.dist.js %>/xima_api.js'
             }
         },
