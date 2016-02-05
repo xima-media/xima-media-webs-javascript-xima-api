@@ -98,6 +98,10 @@ XIMA.api.responsiveImages = (function(window, document, $, undefined){
 
             init(wrapperSelector, imageSelector);
             setResponsiveImages();
+        },
+        refresh: function(){
+
+            setResponsiveImages();
         }
     };
 
