@@ -23,3 +23,8 @@ Folgende Befehle stehen zur Verfügung:
 - `grunt` - Geeignet zur Entwicklungszeit (kein Minifizieren, kein Zusammenfassen, Beobachtungsmodus)
 - `grunt dist` - Einfaches Kopieren der Dateien in das /dist -Verzeichnis.
 - `grunt prod` - Zusammenfügen und Minifizieren der Dateien. Geeignet für Produktiv-Umgebungen.
+
+### Build-Options ###
+- `modules` - Diese Option übernimmt eine kommaseparierte Liste von Modulenamen. Nur diese Module werden in den "fertigen" Dateien aufgenommen. Standardmäßig werden alle Module inkludiert.  
+  **Hinweis:** Die angegeben Modulnamen beziehen sich auf die Dateinamen der Module.  
+  *Beispiel:* `grunt prod --modules=responsiveImages,myCrazyModule`
