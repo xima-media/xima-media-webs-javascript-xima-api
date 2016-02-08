@@ -6,14 +6,6 @@ Nutzungshinweise
 Nach dem Herunterladen sollte `npm install && bower install` ausgeführt werden.
 Entwickler nutzen danach `grunt` und für ein "fertiges" Resultat `grunt prod`.
 
-Entwicklerhinweise
-------------------
-
-### Module ###
-Bestandteile und Features der API sollten als Module im Namespace "XIMA.api" registriert werden.
-Dazu im Verzeichnis `/Source/js/modules` eine JS-Datei pro Modul anlegen und das Modul-Objekt anhängen: `XIMA.api.moduleName`. 
-Zur Entwicklung eines Modules bietet sich das [Revealing Module Pattern](http://molily.de/js/organisation-module.html#revealing-module) an.
-
 ### Build ###
 Für den Build-Prozess wird Grunt verwendet.
 Alle wichtigen Dateien für ein Projekt landen im Verzeichnis /dist.
@@ -28,3 +20,13 @@ Folgende Befehle stehen zur Verfügung:
 - `modules` - Diese Option übernimmt eine kommaseparierte Liste von Modulenamen. Nur diese Module werden in den "fertigen" Dateien aufgenommen. Standardmäßig werden alle Module inkludiert.  
   **Hinweis:** Die angegeben Modulnamen beziehen sich auf die Dateinamen der Module.  
   *Beispiel:* `grunt prod --modules=responsiveImages,myCrazyModule`
+
+
+Entwicklerhinweise
+------------------
+
+### Module ###
+Bestandteile und Features der API sollten als Module im Namespace "XIMA.api" registriert werden.
+Dazu im Verzeichnis `/Source/js/modules` eine JS-Datei pro Modul anlegen und das Modul-Objekt anhängen: `XIMA.api.moduleName`. 
+Zur Entwicklung eines Modules bietet sich das [Revealing Module Pattern](http://molily.de/js/organisation-module.html#revealing-module) an.
+
