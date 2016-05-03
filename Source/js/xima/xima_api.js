@@ -305,6 +305,7 @@ var xima = {
 				_mapInit = true;
 
 				_map = new google.maps.Map(_mapCanvas, _mapOptions);
+				this.applyMapData(useLatLngBounds, useMarkerClusterer);
 
 				// init Layers
 				for (var key in _mapLayers) {
