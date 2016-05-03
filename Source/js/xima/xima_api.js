@@ -166,6 +166,15 @@ var xima = {
 	                    }
 					}
 
+					if (anchor === ''){
+						queryString = document.URL.split('/');
+						for (var i=0; i<queryString.length; i++){
+							if (queryString[i] === 'tab') {
+								anchor = queryString[i+1];
+							}
+						}
+					}
+
                     anchor = (anchor === '') ? default_anchor : anchor;
 
 					var $anchor = jQuery(selector_wrapper +' a[href="#' + anchor + '"][data-toggle="tab"]');
