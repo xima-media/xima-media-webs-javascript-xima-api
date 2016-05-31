@@ -784,10 +784,12 @@ var xima = {
 					// Set View
 					if (parameters.hasOwnProperty('view')){
 
-						var view = new ol.View({
+						jQuery.extend(parameters.view, {
 							center: ol.proj.transform([parameters.view.lon, parameters.view.lat], 'EPSG:4326', 'EPSG:3857'),
 							zoom: parameters.view.zoom || 7
 						});
+
+						var view = new ol.View(parameters.view);
 
 						_this.map.setView(view);
 					}
@@ -840,16 +842,14 @@ var xima = {
 				 * @param wrapperSelector
 				 * @param mapSelector
 				 * @param baseLayerUrl
-				 * @param lat
-                 * @param lon
-                 * @param zoom
+				 * @param view
                  * @param attribution
                  * @returns {Array}
                  */
-				createMaps: function(wrapperSelector, mapSelector, baseLayerUrl, lat, lon, zoom, attribution){
+				createMaps: function(wrapperSelector, mapSelector, baseLayerUrl, view, attribution){
 
 					initialize(wrapperSelector, mapSelector);
-					return getArrayOfMaps({baseLayerUrl: baseLayerUrl, view: {lat: lat, lon: lon, zoom: zoom}, attribution: attribution});
+					return getArrayOfMaps({baseLayerUrl: baseLayerUrl, view: view, attribution: attribution});
 				}
 			}
 
