@@ -4,7 +4,7 @@
  * @author Sebastian Gierth sgi@xima.de
  * @copyright xima media GmbH
  *
- * @version 1.9.1
+ * @version 1.10.0
  * @depends
  *		JavaScript 1.4
  *		jQuery 1.4.1
