@@ -454,19 +454,20 @@ var xima = {
 				}
 				else if (jQuery.type(mapData) === "string")
 				{
-					json = mapData;
-					//is there a dom element the holds json?
-					if (jQuery(mapData).length !== 0)
-					{
-						json = jQuery(mapData).val();
-					}
-
-					try {
-						//try to decode json
-						_mapData = jQuery.parseJSON(json);
-
-					} catch (e) {
-						console.log(errors.msg.IsNotJson);
+					var keepTryingDecodeJson = true;
+					while (keepTryingDecodeJson){
+						try {
+							_mapData = jQuery.parseJSON(json);
+						} catch (e) {
+							if (jQuery(mapData).length !== 0){
+								json = jQuery(mapData).val();
+								continue;
+							}
+							else {
+								console.log(errors.msg.IsNotJson);
+							}
+						}
+						keepTryingDecodeJson = false;
 					}
 				}
 
