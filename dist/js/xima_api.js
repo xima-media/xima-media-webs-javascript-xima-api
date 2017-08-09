@@ -88,7 +88,7 @@ XIMA.api.responsiveImages = (function(window, document, $, undefined){
                         $this.attr('width', wrapElement.width);
                         break;
                     }
-                    else if (j == images.length -1){
+                    else if (j === images.length -1){
                         $this.attr('src', images[j].src);
                         $this.attr('width', wrapElement.width);
                     }
