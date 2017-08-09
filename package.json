@@ -8,19 +8,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@git.xima.de:webs-javascript-xima-api.git"
+    "url": "https://github.com/xima-media/xima-media-webs-javascript-xima-api.git"
   },
   "author": "XIMA MEDIA GmbH",
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-uglify": "^0.9.1",
-    "grunt-contrib-copy": "^0.8.0",
-    "grunt-contrib-compress": "~0.8.0",
-    "grunt-grock": "^0.1.7"
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-uglify": "^3.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-compress": "^1.4.3",
+    "grunt-grock": "^0.1.8"
   }
 }
