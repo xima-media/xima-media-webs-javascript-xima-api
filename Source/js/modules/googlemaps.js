@@ -8,7 +8,7 @@
  *
  */
 XIMA.api.googlemaps = (function(window, document, $, undefined) {
-
+    var my = this;
     var _map          = null;
     var _mapCanvas    = null;
     var _oms          = null;
@@ -55,10 +55,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
     };
 
     // @see possible Map-Options on https://developers.google.com/maps/documentation/javascript/reference?hl=de-DE#MapOptions
-    var _mapOptions = {
-        center: new google.maps.LatLng(51.069660, 13.778158),
-        zoom: 8
-    };
+    var _mapOptions = null;
 
     // @see possible OverlappingMarkerSpiderfier-Options on https://github.com/jawj/OverlappingMarkerSpiderfier
     var _omsOptions = {
@@ -83,6 +80,8 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      */
     this.initGoogleMaps = function(useLatLngBounds, useMarkerClusterer){
 
+        my.getMapOptions();
+
         // if already initialized then return
         if (_mapInit === true){ return this; }
 
@@ -97,7 +96,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
 
         _mapInit = true;
 
-        _map = new google.maps.Map(_mapCanvas, _mapOptions);
+        _map = new google.maps.Map(_mapCanvas, my.getMapOptions());
         this.applyMapData(useLatLngBounds, useMarkerClusterer);
 
         // init Layers
@@ -178,7 +177,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
 
             // max zoom
             var listener = google.maps.event.addListener(_map, "zoom_changed", function() {
-                if (_map.getZoom() > _mapOptions.zoom) _map.setZoom(_mapOptions.zoom);
+                if (_map.getZoom() > my.getMapOptions.zoom) _map.setZoom(my.getMapOptions.zoom);
                 google.maps.event.removeListener(listener);
             });
         }
@@ -219,7 +218,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
 
         if (options){
             if (xima.api.functions.convertDataType(options, _convertRules)){
-                jQuery.extend(_mapOptions, options);
+                jQuery.extend(my.getMapOptions, options);
             }
         }
         return this;
@@ -230,6 +229,14 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * @return Object mapOptions
      */
     this.getMapOptions = function(){
+
+        if (typeof _mapOptions != google.maps) {
+            _mapOptions = {
+                center: new google.maps.LatLng(51.069660, 13.778158),
+                zoom: 8
+            };
+        }
+
         return _mapOptions;
     };
 
