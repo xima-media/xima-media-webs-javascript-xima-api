@@ -48,6 +48,7 @@ module.exports = function (grunt) {
             dist: {
                 src: [
                     '<%= conf.src.js %>/xima_api.js',
+                    '<%= conf.src.js %>/modules/OverlappingMarkerSpiderfier.min.js',
                     '<%= conf.src.js %>/modules/*.js'
                 ],
                 filter: function(filepath) {

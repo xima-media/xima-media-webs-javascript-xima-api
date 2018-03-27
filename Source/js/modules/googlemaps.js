@@ -8,7 +8,8 @@
  *
  */
 XIMA.api.googlemaps = (function(window, document, $, undefined) {
-    var my = this;
+
+    var EXT = {};
     var _map          = null;
     var _mapCanvas    = null;
     var _oms          = null;
@@ -78,9 +79,9 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * @param boolean useMarkerClusterer (default=true)
      * @return this
      */
-    this.initGoogleMaps = function(useLatLngBounds, useMarkerClusterer){
+    EXT.initGoogleMaps = function(useLatLngBounds, useMarkerClusterer){
 
-        my.getMapOptions();
+        EXT.getMapOptions();
 
         // if already initialized then return
         if (_mapInit === true){ return this; }
@@ -96,7 +97,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
 
         _mapInit = true;
 
-        _map = new google.maps.Map(_mapCanvas, my.getMapOptions());
+        _map = new google.maps.Map(_mapCanvas, EXT.getMapOptions());
         this.applyMapData(useLatLngBounds, useMarkerClusterer);
 
         // init Layers
@@ -115,7 +116,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * @param boolean useLatLngBounds (default=true)
      * @param boolean useMarkerClusterer (default=true)
      */
-    this.applyMapData = function(useLatLngBounds, useMarkerClusterer){
+    EXT.applyMapData = function(useLatLngBounds, useMarkerClusterer){
 
         if ( ! _map){
             console.log(errors.msg.MissingMap);
@@ -177,7 +178,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
 
             // max zoom
             var listener = google.maps.event.addListener(_map, "zoom_changed", function() {
-                if (_map.getZoom() > my.getMapOptions.zoom) _map.setZoom(my.getMapOptions.zoom);
+                if (_map.getZoom() > EXT.getMapOptions.zoom) _map.setZoom(EXT.getMapOptions.zoom);
                 google.maps.event.removeListener(listener);
             });
         }
@@ -186,7 +187,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
     /**
      * Closes opening Infowindows
      */
-    this.closeInfoWindows = function()
+    EXT.closeInfoWindows = function()
     {
         if (_infoWindows.length > 0) {
             // detach the info-window from the marker ... undocumented in the API docs
@@ -200,10 +201,10 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * Sets Google-Map-Options
      * @return this
      */
-    this.setMapOptions = function(options){
+    EXT.setMapOptions = function(options){
 
         if (options){
-            if (xima.api.functions.convertDataType(options, _convertRules)){
+            if (EXT.convertDataType(options, _convertRules)){
                 _mapOptions = options;
             }
         }
@@ -214,21 +215,67 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * Adds further Google-Map-Options
      * @return this
      */
-    this.addMapOptions = function(options){
+    EXT.addMapOptions = function(options){
 
         if (options){
-            if (xima.api.functions.convertDataType(options, _convertRules)){
-                jQuery.extend(my.getMapOptions, options);
+            if (EXT.convertDataType(options, _convertRules)){
+                jQuery.extend(EXT.getMapOptions, options);
             }
         }
         return this;
     };
 
     /**
+     * Converts data to datatype defined in convertRules using 'instanceof' for compare
+     * @param mixed data : data as Object which will be converted
+     * @param object convertRules : key-value-object defining the converting rules like { property : constructor }; (property should be the propertyname of data-Object)
+     * @return false|true : true on success else false
+     */
+    EXT.convertDataType = function(data, convertRules){
+
+        if ( ! convertRules || typeof data !== 'object'){
+            return false;
+        }
+
+        var success = true;
+
+        for (var data_key in data){
+            if ( ! convertRules[data_key]) continue;
+
+            var classes = convertRules[data_key].split('.');
+            var className;
+
+            className = window[classes[0]];
+            for (var i=1; i<classes.length; i++){
+                className = className[classes[i]];
+            }
+
+            if (data[data_key] instanceof className || typeof data[data_key] === className){
+                continue;
+            }
+
+            if (typeof data[data_key] !== className){
+                try {
+                    data[data_key] = className(data[data_key]);
+                } catch (e) {
+                    try {
+                        data[data_key] = new className();
+                    } catch(e) {
+                        console.log('Cannot convert '+ data[data_key] +' to '+ className);
+                        success = false;
+                    }
+                }
+            }
+        }
+
+        return success;
+    };
+
+    /**
      * Returns current Google-Map-Options
      * @return Object mapOptions
      */
-    this.getMapOptions = function(){
+    EXT.getMapOptions = function(){
 
         if (typeof _mapOptions != google.maps) {
             _mapOptions = {
@@ -245,7 +292,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * @param mapData : string | object | array The map data as json string, jquery selector string, array or object.
      * @return this
      */
-    this.setMapData = function(mapData){
+    EXT.setMapData = function(mapData){
 
         //is it an array or object?
         if ((jQuery.type(mapData) === "array") || (jQuery.type(mapData) === "object"))
@@ -286,7 +333,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * @param mapCanvas : jQuery-Selector of element
      * @return this
      */
-    this.setMapCanvas = function(mapCanvas){
+    EXT.setMapCanvas = function(mapCanvas){
 
         _mapCanvas = jQuery(mapCanvas).get(0);
         return this;
@@ -299,7 +346,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      *
      * @see kml-notes on https://developers.google.com/kml/documentation/kmlelementsinmaps?hl=de-DE&csw=1
      */
-    this.addLayers = function(kml){
+    EXT.addLayers = function(kml){
 
         if (typeof kml === 'object'){
             for (var key in kml) {
@@ -316,7 +363,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * Remove Layer by key
      * @return this
      */
-    this.removeLayer = function(key){
+    EXT.removeLayer = function(key){
 
         if (key && _mapLayers.key){
             delete _mapLayers.key;
@@ -331,7 +378,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * @param icon
      * @return this
      */
-    this.addMarker = function(location, title, icon, windowContent){
+    EXT.addMarker = function(location, title, icon, windowContent){
 
         if ( ! _map){
             console.log(errors.msg.MissingMap);
@@ -379,7 +426,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * @param map google.maps.Map|null to clear
      * @return this
      */
-    this.setAllMarkersMap = function(map){
+    EXT.setAllMarkersMap = function(map){
 
         for (var i = _markers.length -1; i >= 0; i--) {
             _markers[i].setMap(map);
@@ -391,7 +438,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * Removes the markers from the map, but keeps them in the array
      * @return this
      */
-    this.clearMarkers = function(){
+    EXT.clearMarkers = function(){
         this.setAllMarkersMap(null);
         return this;
     };
@@ -400,7 +447,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * Deletes all markers in the array by removing references to them
      * @return this
      */
-    this.deleteMarkers = function(){
+    EXT.deleteMarkers = function(){
         this.clearMarkers();
         _markers = [];
         return this;
@@ -410,7 +457,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * Shows any markers currently in the array
      * @return this
      */
-    this.showMarkers = function(){
+    EXT.showMarkers = function(){
         if (_map){
             this.setAllMarkersMap(_map);
         }
@@ -421,49 +468,22 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * Creates OverlappingMarkerSpiderfier
      * @return this
      */
-    this.createOverlappingMarkerSpiderfier = function(){
+    EXT.createOverlappingMarkerSpiderfier = function(){
+
+        window.initOverlappingMarkerSpiderfier();
 
         if (_map){
             _oms = new OverlappingMarkerSpiderfier(_map, _omsOptions);
         }
+
         return this;
     };
-
-    // TODO : data-type verification before apply OMS-Options
-
-    // /**
-    //  * Sets OMS-Options
-    //  * @return this
-    //  */
-    // this.setOMSOptions = function(options){
-
-    // 	if (options){
-    // 		if (xima.api.functions.convertDataType(options, _convertRules)){
-    // 			_omsOptions = options;
-    // 		}
-    // 	}
-    // 	return this;
-    // };
-
-    // /**
-    //  * Adds further OMS-Options
-    //  * @return this
-    //  */
-    // this.addOMSOptions = function(options){
-
-    // 	if (options){
-    // 		if (xima.api.functions.convertDataType(options, _convertRules)){
-    // 			jQuery.extend(_omsOptions, options);
-    // 		}
-    // 	}
-    // 	return this;
-    // };
 
     /**
      * Returns current MarkerClusterer-Options
      * @return Object markerClustererOptions
      */
-    this.getOMSOptions = function(){
+    EXT.getOMSOptions = function(){
         return _omsOptions;
     };
 
@@ -474,7 +494,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
      * @param options PolylineOptions for google.maps.Polyline @see https://developers.google.com/maps/documentation/javascript/reference?hl=de-DE#PolylineOptions
      * @return this
      */
-    this.drawPolyline = function(key, routeCoords, options){
+    EXT.drawPolyline = function(key, routeCoords, options){
 
         var path = [];
 
@@ -504,10 +524,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
         };
 
         if (options){
-            // TODO : create convertRules (or other function to determine correct types)
-            //if (xima.api.functions.convertDataType(options, convertRules)){
             jQuery.extend(polylineOptions, options);
-            //}
         }
 
         _polylines[key] = new google.maps.Polyline(polylineOptions);
@@ -518,5 +535,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
 
         return this;
     };
+
+    return EXT;
 
 })(window, document, jQuery);
