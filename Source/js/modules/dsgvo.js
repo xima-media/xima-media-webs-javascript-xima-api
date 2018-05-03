@@ -11,7 +11,6 @@ XIMA.api.dsgvo = (function(window, document, $, undefined) {
     var EXT = {};
 
     var _namespace = 'XIMA.api.dsgvo';
-    var _mapStorageIdentifier = 'ximaMapState';
     var _classCanvasHint = 'js-map-hint';
     var _selectorCanvasHint = '.' + _classCanvasHint;
     var _isMapActivated = false;
@@ -22,6 +21,8 @@ XIMA.api.dsgvo = (function(window, document, $, undefined) {
             debug:                  false,
             // selector of map script url element within attribute 'data-url'
             scriptUrlSelector:      '.map-script-url',
+            // identifier for local storage to set user decision
+            mapStorageIdentifier:   'ximaMapState',
             // use global setting for activate/deactivate maps integration
             useGlobal:              false,
             // enable maps activation for canvas elements
@@ -64,7 +65,7 @@ XIMA.api.dsgvo = (function(window, document, $, undefined) {
         }
 
         // check initial state
-        if (EXT.getState(_mapStorageIdentifier) === 'true') {
+        if (EXT.getState(_config.map.mapStorageIdentifier) === 'true') {
             _isMapActivated = true;
 
             EXT.loadScript();
@@ -76,7 +77,7 @@ XIMA.api.dsgvo = (function(window, document, $, undefined) {
 
         // handle global checkbox
         if (_config.map.switchElement && $(_config.map.switchElement).length) {
-            $(_config.map.switchElement).prop('checked', EXT.getState(_mapStorageIdentifier) === 'true');
+            $(_config.map.switchElement).prop('checked', EXT.getState(_config.map.mapStorageIdentifier) === 'true');
         }
 
         return this;
@@ -109,7 +110,7 @@ XIMA.api.dsgvo = (function(window, document, $, undefined) {
             $(_config.map.switchElement).change(function (event) {
                 _config.map.debug ? console.log('[' + _namespace + '] switch maps representation state to: ' + $(this).is(":checked")): '';
 
-                EXT.setState(_mapStorageIdentifier,$(this).is(":checked"));
+                EXT.setState(_config.map.mapStorageIdentifier,$(this).is(":checked"));
 
                 if ($(this).is(":checked")) {
                     EXT.loadScript();
@@ -134,8 +135,8 @@ XIMA.api.dsgvo = (function(window, document, $, undefined) {
 
 
                     if (_config.map.useGlobal) {
-                        EXT.setState(_mapStorageIdentifier, true);
-                        $(_config.map.switchElement).prop('checked', EXT.getState(_mapStorageIdentifier) === 'true');
+                        EXT.setState(_config.map.mapStorageIdentifier, true);
+                        $(_config.map.switchElement).prop('checked', EXT.getState(_config.map.mapStorageIdentifier) === 'true');
                     }
                 }
             });
