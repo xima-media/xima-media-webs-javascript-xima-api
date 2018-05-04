@@ -3,7 +3,8 @@
  *
  * @author Konrad Michalik <kmi@xima.de>
  * @version 1.0.0
- *
+ * @depends
+ *        jQuery 1.4.1
  *
  */
 XIMA.api.dsgvo = (function (window, document, $, undefined) {

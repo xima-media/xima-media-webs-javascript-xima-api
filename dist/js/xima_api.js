@@ -82,8 +82,8 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
                     textSize: '12px',
                     iconUrl: null
                 },
-                // optional class for canvas hint
-                className: null
+                // class for canvas hint
+                className: 'js-map-hint'
             }
         }
     };
@@ -100,6 +100,8 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
      * @param parameters
      */
     EXT.initialize = function (parameters) {
+
+        _config.map.debug ? console.log('[' + _namespace + '] dsgvo.js initialized') : '';
 
         // load additional parameters
         if (parameters) {
