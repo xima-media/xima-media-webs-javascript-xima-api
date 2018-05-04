@@ -280,7 +280,6 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
     var _map          = null;
     var _mapCanvas    = null;
     var _oms          = null;
-    var _mapInit      = false;
     var _infoWindows  = [];
     var _markers      = [];
     var _polylines    = [];
@@ -351,7 +350,10 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
         EXT.getMapOptions();
 
         // if already initialized then return
-        if (_mapInit === true){ return this; }
+        // if already initialized then return
+        if ($(_mapCanvas).data("map-initialized") && $(_mapCanvas).data("map-initialized") === true) {
+            return this;
+        }
 
         // return if something is missing
 
@@ -362,7 +364,7 @@ XIMA.api.googlemaps = (function(window, document, $, undefined) {
 
         // begin init
 
-        _mapInit = true;
+        $(_mapCanvas).data("map-initialized", true);
 
         _map = new google.maps.Map(_mapCanvas, EXT.getMapOptions());
         this.applyMapData(useLatLngBounds, useMarkerClusterer);
