@@ -214,7 +214,7 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
             $.each(_config.map.canvasElements, function (key, selector) {
                 if ($(selector).length) {
                     $(selector).addClass(_config.map.canvasHint.className);
-                    $(selector).css('background', _config.map.canvasHint.style.backgroundColor);
+                    $(selector).css('background', _config.map.canvasHint.style.background);
                     $(selector).css('color', _config.map.canvasHint.style.textColor);
                     $(selector).css('font-size', _config.map.canvasHint.style.textSize);
                     $(selector).hover(function () {
@@ -223,7 +223,7 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
 
                     var _icon = _config.map.canvasHint.style.iconUrl ? '<img src="' + _config.map.canvasHint.style.iconUrl + '" style="width: ' + _config.map.canvasHint.style.iconSize + ';" alt="Forbidden map" />' : _svgIcon;
 
-                    var _html = '<div class="' + _config.map.canvasHint.className + '-hint" style="position: absolute; width: 250px; height: 250px; top: 50%; left: 50%; margin-top: -100px; margin-left: -100px; text-align: center; padding: 10x;">' +
+                    var _html = '<div class="' + _config.map.canvasHint.className + '-hint" style="position: absolute; width: 250px; height: 250px; top: 50%; left: 50%; margin-top: -125px; margin-left: -125px; text-align: center; padding: 10px;">' +
                         _icon +
                         '<div class="' + _config.map.canvasHint.className + '-hint-body" style="margin-top: 10px;">' +
                         _config.map.canvasHint.msg +
