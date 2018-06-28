@@ -21,10 +21,10 @@ XIMA.api.redirectConfirmation = (function (window, document, $, undefined) {
         linkElementSelector: 'a',
         // class for exclusion elements
         excludeSelectorClass: 'xima-js-exclude-from-redirect-confirmation',
-        //
+        // can also be used to also target internal links
         onlyExternalLinks: true,
         // including a automatic redirection
-        includeTimer: true,
+        timerMode: true,
         // timer duration for automatic redirection
         timerDuration: 5000,
         // callback when showing modal
@@ -34,9 +34,9 @@ XIMA.api.redirectConfirmation = (function (window, document, $, undefined) {
             // messages
             message: {
                 title: 'Sie verlassen nun die Webseite',
-                redirectIncomming: 'Sie werden in 5 Sekunden auf den externen Link, den Sie angeklickt haben, umgeleitet.',
-                redirectNotWorking: 'Sollte dies nicht funktionieren, klicken Sie bitte auf den folgenden Link:',
-                redirectConfirm: 'Bitte klicken Sie auf den folgenden Link, um die Weiterleitung zu bestätigen',
+                // if option "timerMode" is true, the message field "bodyTimerMode" is displayed, otherwise "bodyClassicMode" is displayed
+                bodyTimerMode: 'Sie werden in 5 Sekunden auf den externen Link, den Sie angeklickt haben, umgeleitet. Sollte dies nicht funktionieren, klicken Sie bitte auf den folgenden Link:',
+                bodyClassicMode: 'Bitte klicken Sie auf den folgenden Link, um die Weiterleitung zu bestätigen',
                 abort: 'Abbrechen'
 
             },
@@ -97,13 +97,11 @@ XIMA.api.redirectConfirmation = (function (window, document, $, undefined) {
     this.createModal = function () {
         // Build up specific modal message
         var message = '';
-        if (_config.includeTimer) {
-            message = '<p>' + _config.modal.message.redirectIncomming + '</p>\n' +
-                '<p>' + _config.modal.message.redirectNotWorking + '</p>\n'
+        if (_config.timerMode) {
+            message = '<p>' + _config.modal.message.bodyTimerMode + '</p>\n';
             ;
         } else {
-            message = '<p>' + _config.modal.message.redirectConfirm + '</p>\n'
-            ;
+            message = '<p>' + _config.modal.message.bodyClassicMode + '</p>\n';
         }
         var modal = '<div class="modal fade ' + _config.modal.class + '" role="dialog">\n' +
             '  <div class="modal-dialog">\n' +
@@ -141,7 +139,7 @@ XIMA.api.redirectConfirmation = (function (window, document, $, undefined) {
         // Show modal
         $('.' + _config.modal.class).modal('show');
 
-        if (_config.includeTimer) {
+        if (_config.timerMode) {
             _self.redirectTimer(link);
         }
     };
