@@ -163,7 +163,7 @@ XIMA.api.redirectConfirmation = (function (window, document, $, undefined) {
 
             _config.debug ? console.log('[' + _namespace + '] redirect on timer') : '';
 
-            $('.' + _config.modal.class + '-link').click();
+            $('.' + _config.modal.class + '-link')[0].click();
         }, _config.timerDuration);
 
         // Possibility to cancel redirection
