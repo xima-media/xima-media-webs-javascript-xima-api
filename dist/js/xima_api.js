@@ -998,6 +998,8 @@ XIMA.api.redirectConfirmation = (function (window, document, $, undefined) {
         timerMode: true,
         // timer duration for automatic redirection
         timerDuration: 5000,
+        // optionally suppress target, e.g. _blank, and open link in same window
+        suppressTarget: false,
         // callback when showing modal
         onRedirectModal: function () {},
         // modal styling
@@ -1107,7 +1109,8 @@ XIMA.api.redirectConfirmation = (function (window, document, $, undefined) {
         var linkElement = $('.' + _config.modal.class + '-link');
         linkElement.html(link);
         linkElement.attr('href',link);
-        linkElement.attr('target',target);
+
+        !_config.suppressTarget ? linkElement.attr('target',target) : '';
 
         // Show modal
         $('.' + _config.modal.class).modal('show');
