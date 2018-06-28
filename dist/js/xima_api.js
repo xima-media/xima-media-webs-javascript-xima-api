@@ -1058,7 +1058,8 @@ XIMA.api.redirectConfirmation = (function (window, document, $, undefined) {
         $(selector).unbind();
         $(selector).on('click', function (event) {
             event.preventDefault();
-            _self.showModal($(this).attr('href'));
+            var target = $(this).attr('target');
+            _self.showModal($(this).attr('href'), target);
         });
     };
 
@@ -1099,13 +1100,14 @@ XIMA.api.redirectConfirmation = (function (window, document, $, undefined) {
     /**
      * Showing information modal for redirecting
      */
-    this.showModal = function (link) {
+    this.showModal = function (link, target) {
 
         _config.onRedirectModal();
 
         var linkElement = $('.' + _config.modal.class + '-link');
         linkElement.html(link);
         linkElement.attr('href',link);
+        linkElement.attr('target',target);
 
         // Show modal
         $('.' + _config.modal.class).modal('show');
@@ -1113,6 +1115,11 @@ XIMA.api.redirectConfirmation = (function (window, document, $, undefined) {
         if (_config.timerMode) {
             _self.redirectTimer(link);
         }
+
+        linkElement.unbind();
+        linkElement.click(function() {
+            $('.' + _config.modal.class).modal('hide');
+        });
     };
 
 
@@ -1127,7 +1134,7 @@ XIMA.api.redirectConfirmation = (function (window, document, $, undefined) {
 
             _config.debug ? console.log('[' + _namespace + '] redirect on timer') : '';
 
-            window.location.href = link;
+            $('.' + _config.modal.class + '-link').click();
         }, _config.timerDuration);
 
         // Possibility to cancel redirection
