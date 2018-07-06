@@ -1,6 +1,6 @@
 {
   "name": "webs-javascript-xima-api",
-  "version": "2.7.5",
+  "version": "2.8.0",
   "description": "The XIMA JavaScript API is a bunch of modules to provide common JavaScript functionalities and plugins.",
   "main": "Source/js/xima/xima_api.js",
   "scripts": {
