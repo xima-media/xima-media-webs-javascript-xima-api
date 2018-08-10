@@ -77,6 +77,10 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
             callback: function () {
 
             },
+            // callback for clicking switchElement
+            onSwitch: function (state) {
+
+            },
             // styling
             canvasHint: {
                 // canvas hint message
@@ -181,10 +185,10 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
                 EXT.setState(_config.map.mapStorageIdentifier, $(this).is(":checked"));
 
                 if ($(this).is(":checked")) {
-                    _isMapActivated = true;
-
                     EXT.loadScript();
                 }
+
+                _config.map.onSwitch($(this).is(":checked"));
             });
         }
 
@@ -253,7 +257,6 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
      */
     EXT.setState = function (identifier, state) {
         if (_config.map.useCookie) {
-            _config.map.debug ? console.log('[' + _namespace + '] set cookie ' + identifier + '/' + state) : '';
             _self.createCookie(
                 identifier,
                 state,
@@ -277,8 +280,7 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
      */
     EXT.getState = function (identifier) {
         if (_config.map.useCookie) {
-            _config.map.debug ? console.log('[' + _namespace + '] loading cookie ' + _self.getCookie(identifier)) : '';
-            return _self.getCookie(identifier);
+            _self.getCookie(identifier);
         } else {
             if (typeof(Storage) !== "undefined") {
                 return localStorage.getItem(identifier);

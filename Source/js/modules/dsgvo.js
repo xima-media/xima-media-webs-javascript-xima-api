@@ -41,6 +41,10 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
             callback: function () {
 
             },
+            // callback for clicking switchElement
+            onSwitch: function (state) {
+
+            },
             // styling
             canvasHint: {
                 // canvas hint message
@@ -146,9 +150,9 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
 
                 if ($(this).is(":checked")) {
                     EXT.loadScript();
-                } else {
-                    EXT.hideCanvasElements();
                 }
+
+                _config.map.onSwitch($(this).is(":checked"));
             });
         }
 
