@@ -46,6 +46,7 @@ Note: The Google Maps API v3 must be included *before* this code
 XIMA.api.dsgvo = (function (window, document, $, undefined) {
 
     var EXT = {};
+    var _self = this;
 
     var _namespace = 'XIMA.api.dsgvo';
     var _isMapActivated = false;
@@ -62,6 +63,10 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
             mapStorageIdentifier: 'ximaMapState',
             // use global setting for activate/deactivate maps integration
             useGlobal: false,
+            // use cookie to store settings (default using localstorage)
+            useCookie: false,
+            // lifetime of cookie
+            cookieLifetime: 0,
             // enable maps activation for canvas elements
             useCanvasHint: true,
             // use checkbox to switch global setting
@@ -156,7 +161,7 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
 
                         _config.map.callback();
                     })
-                    .fail(function( jqxhr, settings, exception ) {
+                    .fail(function (jqxhr, settings, exception) {
                         _config.map.debug ? console.log('[' + _namespace + '] getScript failed') : '';
                     });
             })(window, jQuery);
@@ -176,6 +181,8 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
                 EXT.setState(_config.map.mapStorageIdentifier, $(this).is(":checked"));
 
                 if ($(this).is(":checked")) {
+                    _isMapActivated = true;
+
                     EXT.loadScript();
                 }
             });
@@ -245,12 +252,21 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
      * @return {boolean}
      */
     EXT.setState = function (identifier, state) {
-        if (typeof(Storage) !== "undefined") {
-            localStorage.setItem(identifier, state);
-            return true;
+        if (_config.map.useCookie) {
+            _config.map.debug ? console.log('[' + _namespace + '] set cookie ' + identifier + '/' + state) : '';
+            _self.createCookie(
+                identifier,
+                state,
+                _config.map.cookieLifetime
+            );
         } else {
-            _config.map.debug ? console.log('[' + _namespace + '] browser doesn\'t support local storage') : '';
-            return false;
+            if (typeof(Storage) !== "undefined") {
+                localStorage.setItem(identifier, state);
+                return true;
+            } else {
+                _config.map.debug ? console.log('[' + _namespace + '] browser doesn\'t support local storage') : '';
+                return false;
+            }
         }
     };
 
@@ -260,12 +276,57 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
      * @returns {*}
      */
     EXT.getState = function (identifier) {
-        if (typeof(Storage) !== "undefined") {
-            return localStorage.getItem(identifier);
+        if (_config.map.useCookie) {
+            _config.map.debug ? console.log('[' + _namespace + '] loading cookie ' + _self.getCookie(identifier)) : '';
+            return _self.getCookie(identifier);
         } else {
-            _config.map.debug ? console.log('[' + _namespace + '] browser doesn\'t support local storage') : '';
-            return false;
+            if (typeof(Storage) !== "undefined") {
+                return localStorage.getItem(identifier);
+            } else {
+                _config.map.debug ? console.log('[' + _namespace + '] browser doesn\'t support local storage') : '';
+                return false;
+            }
         }
+
+    };
+
+    /**
+     *
+     * @param name
+     * @param value
+     * @param lifetime
+     */
+    _self.createCookie = function (name, value, lifetime) {
+        var expires;
+        if (lifetime) {
+            var date = new Date();
+            date.setTime(date.getTime() + (lifetime));
+            expires = "; expires=" + date.toGMTString();
+        }
+        else {
+            expires = "";
+        }
+        document.cookie = name + "=" + value + expires + "; path=/";
+    };
+
+    /**
+     *
+     * @param name
+     * @returns {*}
+     */
+    _self.getCookie = function (name) {
+        if (document.cookie.length > 0) {
+            c_start = document.cookie.indexOf(name + "=");
+            if (c_start !== -1) {
+                c_start = c_start + name.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end === -1) {
+                    c_end = document.cookie.length;
+                }
+                return unescape(document.cookie.substring(c_start, c_end));
+            }
+        }
+        return "";
     };
 
     return EXT;
