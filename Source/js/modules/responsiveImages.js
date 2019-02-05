@@ -44,24 +44,20 @@ XIMA.api.responsiveImages = (function(window, document, $, undefined){
             };
 
             // Iterate through all <img/> of wrapper
-            $(selectors.image, $(this)).each(function(){
+            $(selectors.image, $this).each(function(){
 
                 var $this = $(this);
 
-                // Get sourceset by comma seperated data-attribute
-                var srcsets = $this.data('srcset').split(',');
-
-                // create objects from array of sourcesets
+                var regex = /([^\s,]+)\s+(\d+)w/g;
+                var srcset = $this.data('srcset');
                 var images = [];
-                for (var i in srcsets){
+                var data;
 
-                    if (srcsets[i]) {
-
-                        images.push({
-                            src: /(?:.(?!\d+w))+/.exec(srcsets[i])[0].trim(),
-                            width: /(\d+)(?:w)/.exec(srcsets[i])[1]
-                        });
-                    }
+                while ((data = regex.exec(srcset)) !== null){
+                    images.push({
+                        src: data[1],
+                        width: parseInt(data[2])
+                    });
                 }
 
                 // Sort ascending by width property
@@ -70,15 +66,17 @@ XIMA.api.responsiveImages = (function(window, document, $, undefined){
                 });
 
                 // Set the best fitting source as src-attribute
-                for (var j in images){
-                    if (images[j].width >= wrapElement.width){
-                        $this.attr('src', images[j].src);
+                var renderWidth = wrapElement.width * window.devicePixelRatio;
+                for (var i=0; i < images.length; i++) {
+
+                    if (images[i].width >= renderWidth){
                         $this.attr('width', wrapElement.width);
+                        $this.attr('src', images[i].src);
                         break;
                     }
-                    else if (j === images.length -1){
-                        $this.attr('src', images[j].src);
+                    else if (i === images.length -1){
                         $this.attr('width', wrapElement.width);
+                        $this.attr('src', images[i].src);
                     }
                 }
             });
