@@ -91,7 +91,7 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
 
         // load additional parameters
         if (parameters) {
-            jQuery.extend(_config.map, parameters.map);
+            jQuery.extend(true, _config.map, parameters.map);
         }
 
         _config.map.debug ? console.log('[' + _namespace + '] dsgvo.js initialized') : '';
@@ -249,11 +249,14 @@ XIMA.api.dsgvo = (function (window, document, $, undefined) {
                             (_config.map.canvasHint.style.iconUrl ?
                                 '<img src="' + _config.map.canvasHint.style.iconUrl + '" style="width: ' + _config.map.canvasHint.style.iconSize + ';" alt="Forbidden map" />' :
                                 _svgIcon);
+                        
+                        var hintStyle = _config.map.canvasHint.style.disableStyles ? '' : _config.map.canvasHint.style.hintStyle;
+                        var hintBodyStyle = _config.map.canvasHint.style.disableStyles ? '' : _config.map.canvasHint.style.hintBodyStyle;
 
                         // preparing default template
-                        _html = '<div class="' + _config.map.canvasHint.className + '-hint" style="' + !_config.map.canvasHint.style.disableStyles ? _config.map.canvasHint.style.hintStyle : +'">' +
+                        _html = '<div class="' + _config.map.canvasHint.className + '-hint" style="' + hintStyle +'">' +
                         _icon +
-                        '<div class="' + _config.map.canvasHint.className + '-hint-body" style="' + !_config.map.canvasHint.style.disableStyles ? _config.map.canvasHint.style.hintBodyStyle : +'">' +
+                        '<div class="' + _config.map.canvasHint.className + '-hint-body" style="' + hintBodyStyle +'">' +
                             _config.map.canvasHint.msg +
                             '</div>' +
                             '</div>';
