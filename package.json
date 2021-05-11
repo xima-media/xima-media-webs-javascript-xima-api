@@ -25,6 +25,6 @@
     "grunt-grock": "^0.1.8"
   },
   "dependencies": {
-    "jquery": "^3.6.0"
+    "jquery": "^3.5.0"
   }
 }
