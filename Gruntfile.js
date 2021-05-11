@@ -17,7 +17,6 @@ module.exports = function (grunt) {
                 dir: './dist',
                 js: '<%= conf.dist.dir %>/js'
             },
-            doc: './documentation',
             src: {
                 dir: 'Source',
                 js: '<%= conf.src.dir %>/js'
@@ -92,7 +91,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-compress');
-    grunt.loadNpmTasks('grunt-grock');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     /**

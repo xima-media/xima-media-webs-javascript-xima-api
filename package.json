@@ -21,8 +21,7 @@
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-uglify": "^5.0.1",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-grock": "^0.1.8"
+    "grunt-contrib-watch": "^1.1.0"
   },
   "dependencies": {
     "jquery": "^3.6.0"
